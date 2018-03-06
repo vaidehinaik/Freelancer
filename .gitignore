@@ -1,0 +1,25 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+client_react_redux/node_modules/*
+server_express/node_modules/*
+
+# testing
+client_react_redux/coverage/*
+
+# production
+client_react_redux/build/*
+
+# misc
+client_react_redux/env.local
+client_react_redux/env.development.local
+client_react_redux/env.test.local
+client_react_redux/env.production.local
+
+server_express/npm-debug.log*
+client_react_redux/npm-debug.log*
+client_react_redux/yarn-debug.log*
+client_react_redux/yarn-error.log*
+
+# Remove .DS_Store
+.DS_Store
