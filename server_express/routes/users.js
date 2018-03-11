@@ -5,17 +5,28 @@ var mysqlconn = require('../public/javascripts/dbServicesWithPool');
 
 /*Salt round for hashing password*/
 const saltRounds = 10;
+/*DB TABLES*/
 const USER_TABLE = "freelancer.users";
 const PROJECT_TABLE = "freelancer.projects";
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  // res.send('respond with a resource');
+  const mysql_select_query = "select * from " + USER_TABLE;
+  console.log("Executing MySQL Query: " + mysql_select_query);
+  mysqlconn.selectData(function(error, results) {
+    if (error) {
+      console.log("DB Error in select query: post project !!!");
+      throw error;
+    } else {
+      res.status(201).json(results);
+    }
+  }, mysql_select_query)
 });
 
 router.post('/login', function(req, res) {
+  console.log("Attempting to login by user: " + req.body.username);
   const mysql_query = "select * from " + USER_TABLE + " where username='" + req.body.username +"'";
-  console.log("Executing MySQL Query: " + mysql_query);
   mysqlconn.selectData(function(error, results) {
       if (error) {
           console.log("DB Error: Login !!!");
@@ -33,8 +44,8 @@ router.post('/login', function(req, res) {
 })
 
 router.post('/signup', function(req, res) {
+  console.log("Attempting to signup by user: " + req.body.username);
   const mysql_select_query = "select * from " + USER_TABLE + " where username='" + req.body.username +"'";
-  console.log("Executing MySQL Query: " + mysql_select_query);
   mysqlconn.selectData(function(error, results) {
     if (error) {
       console.log("DB Error: Signup !!!");
@@ -66,6 +77,11 @@ router.post('/signup', function(req, res) {
         }
     }
   }, mysql_select_query)
+})
+
+router.get('/logout',function(req, res) {
+    console.log("Attempting to logout by user: " + req.body.username);
+    res.status(200).json({message: "User successfully logged out !!!"});
 })
 
 module.exports = router;

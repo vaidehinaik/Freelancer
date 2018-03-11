@@ -8,12 +8,10 @@ exports.selectData = (callback, query) => {
         connection.query(query, function(err, rows, fields) {
             if(err) {
                 console.log("ERROR: " + err.message);
+            } else {
+              console.dir("Results: " + JSON.stringify(rows));
             }
-            else
-            {
-              console.dir("Results: \n" + JSON.stringify(rows));
-              callback(err, rows);
-            }
+            callback(err, rows);
         });
       connection.release();
       console.log("Connection released");
@@ -29,8 +27,8 @@ exports.insertData = (callback, query) => {
       			} else {
         				console.log("Results: \n" + JSON.stringify(result));
                 console.log("The inserted id is: " + result.insertId);
-        				callback(err, result);
       			}
+            callback(err, result);
     		});
         connection.release();
         console.log("Connection released");

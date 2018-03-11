@@ -1,11 +1,11 @@
 const initialState = {
     name: '',
-    userid: '',
     username: '',
-    skills: '',
+    skills: [],
     contact: '',
     aboutMe: '',
-    projects: []
+    projects: [],
+    userProjects: []
 }
 
 const reducers = (state = initialState, action) => {
@@ -15,6 +15,10 @@ const reducers = (state = initialState, action) => {
           ...state,
           username: action.payload.username
         };
+    break;
+
+    case "RESET":
+        state=null;
     break;
 
     default:

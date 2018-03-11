@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
+import Octicon from 'react-octicon';
 import * as API from '../api/API';
 
 class Signup extends Component {
@@ -65,7 +66,6 @@ class Signup extends Component {
                         message: json.message
                     });
                     this.displayMsg();
-                    this.proceedToLogin();
                 } else if (status === 401) {
                     this.setState({
                         message: "Something went wrong. Try signing up again !!!"
@@ -83,83 +83,94 @@ class Signup extends Component {
 
   render() {
         return (
-          <div className="row justify-content-md-center">
-              <div className="col-md-6 col-sm-12 col-lg-6 col-md-offset-3">
-                  <div className="panel panel-primary">
-                      <br></br><br></br><br></br><br></br><br></br>
-                      <div className="panel-body">
-                          <form name="myform">
-                              <div className="form-group">
-                                  <h1>SignUp</h1>
-                              </div>
-                              <br></br>
-                              <div className="form-group">
-                                  <div className="panel-heading">
-                                    <h5><b>Enter Your Details Here:</b></h5>
-                                  </div>
-                              </div>
+          <div className="container-fluid">
+            <br></br><br></br><br></br><br></br><br></br>
+            <div className="row justify-content-md-center">
+                <div className="col-md-6 col-sm-12 col-lg-6">
+                    <div className="panel panel-primary">
+                        <br></br><br></br><br></br><br></br><br></br>
+                        <div className="panel-body">
+                            <form name="myform">
+                                <div className="form-group">
+                                    <h1>
+                                      <img src="/fl-small.png"
+                                           height="50"
+                                           width="50"
+                                           className="left-block"
+                                           alt="logo"
+                                      />
+                                      <span> SignUp</span>
+                                    </h1>
+                                </div>
+                                <br></br>
+                                <div className="form-group">
+                                    <div className="panel-heading">
+                                      <h5><b><i>Register:</i></b></h5>
+                                    </div>
+                                </div>
 
-                              <div className="form-group">
-                                  <input
-                                      className="form-control"
-                                      type="text"
-                                      label="Name *"
-                                      placeholder="Name"
-                                      required="required"
-                                      value={this.state.name}
-                                      onChange={this.handleNameInput}
-                                  />
-                              </div>
+                                <div className="form-group">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        label="Name *"
+                                        placeholder="Name"
+                                        required="required"
+                                        value={this.state.name}
+                                        onChange={this.handleNameInput}
+                                    />
+                                </div>
 
-                              <div className="form-group">
-                                  <input
-                                      className="form-control"
-                                      type="text"
-                                      label="Username *"
-                                      placeholder="Username"
-                                      required="required"
-                                      value={this.state.username}
-                                      onChange={this.handleUsernameInput}
-                                  />
-                              </div>
+                                <div className="form-group">
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        label="Username *"
+                                        placeholder="Username"
+                                        required="required"
+                                        value={this.state.username}
+                                        onChange={this.handleUsernameInput}
+                                    />
+                                </div>
 
-                              <div className="form-group">
-                                  <input
-                                      className="form-control"
-                                      type="password"
-                                      label="Password *"
-                                      placeholder="Password"
-                                      required="required"
-                                      value={this.state.password}
-                                      onChange={this.handlePasswordInput}
-                                  />
-                              </div>
+                                <div className="form-group">
+                                    <input
+                                        className="form-control"
+                                        type="password"
+                                        label="Password *"
+                                        placeholder="Password"
+                                        required="required"
+                                        value={this.state.password}
+                                        onChange={this.handlePasswordInput}
+                                    />
+                                </div>
 
-                              <div className="form-group">
-                                  <button
-                                      className="btn btn-primary"
-                                      type="button"
-                                      onClick={() => this.handleSubmit(this.state)}>
-                                      SignUp
-                                  </button>
-                                  <hr></hr>
-                                  <p>Already a <i><b>freelancer.com</b></i> member?
-                                      <Link to={`/`} className="link">
-                                          Login
-                                      </Link>
-                                  </p>
-                              </div>
+                                <div className="form-group">
+                                    <button
+                                        className="btn btn-primary"
+                                        type="button"
+                                        onClick={() => this.handleSubmit(this.state)}>
+                                        SignUp
+                                    </button>
+                                    <hr></hr>
+                                    <p>Already a <i><b>freelancer.com</b></i> member?
+                                        <Link to={`/`} className="link">
+                                            Login
+                                        </Link>
+                                    </p>
+                                </div>
 
-                              <div className="form-group">
-                                  <div id="signupMsg" className="alert alert-warning">
-                                      {this.state.message}
-                                  </div>
-                              </div>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-          </div>
+                                <div className="form-group">
+                                    <div id="signupMsg" className="alert alert-warning">
+                                        <Octicon name="alert"/> {this.state.message}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         );
     }
 }
