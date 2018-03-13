@@ -24,7 +24,7 @@ router.post('/postproject', function(req, res) {
         } else {
             const userId = results[0].userId;
             console.log("Found user with username: " + req.body.username + " & user id: " + userId);
-            var skills = req.body.projectSkills.join();
+            var skills = req.body.skills.join(',');
             const mysql_insert_query = "insert into " + PROJECT_TABLE
                                      + " (title,ownerUserId,description,budgetLow,budgetHigh,skills) values('"
                                      + req.body.title + "'," + userId + ",'" + req.body.description + "',"
@@ -41,6 +41,66 @@ router.post('/postproject', function(req, res) {
                     res.status(201).json(results);
                 }
             }, mysql_insert_query);
+        }
+    }
+  }, mysql_select_query)
+});
+
+router.post('/allexceptuserprojects', function(req, res) {
+  console.log("Attempting to fetch all projects except those uploaded by user: " + req.body.username);
+  const mysql_select_query = "select * from " + USER_TABLE + " where username='" + req.body.username +"'";
+  mysqlconn.selectData(function(error, results) {
+    if (error) {
+      console.log("DB Error in select query: all except user project!!!");
+      throw error;
+    } else {
+        if (results.length == 0) {
+            res.status(401).json({message: "Unauthorised user!!!"});
+        } else {
+            const userId = results[0].userId;
+            console.log("Found user with username: " + req.body.username + " & user id: " + userId);
+            const mysql_project_select_query = "SELECT * from " + PROJECT_TABLE + " where ownerUserId !=" + userId;
+
+            mysqlconn.selectData(function(error, results) {
+                if (error) {
+                    console.log("DB Error in select query: all except user project !!!");
+                    throw error;
+                } else {
+                    results.message = "List of the projects other than the user projects: ";
+                    console.log("Result message: " + results.message);
+                    res.status(201).json(results);
+                }
+            }, mysql_project_select_query);
+        }
+    }
+  }, mysql_select_query)
+});
+
+router.post('/userprojects', function(req, res) {
+  console.log("Attempting to fetch all projects except those uploaded by user: " + req.body.username);
+  const mysql_select_query = "select * from " + USER_TABLE + " where username='" + req.body.username +"'";
+  mysqlconn.selectData(function(error, results) {
+    if (error) {
+      console.log("DB Error in select query: user projects!!!");
+      throw error;
+    } else {
+        if (results.length == 0) {
+            res.status(401).json({message: "Unauthorised user!!!"});
+        } else {
+            const userId = results[0].userId;
+            console.log("Found user with username: " + req.body.username + " & user id: " + userId);
+            const mysql_project_select_query = "SELECT * from " + PROJECT_TABLE + " where ownerUserId =" + userId;
+
+            mysqlconn.selectData(function(error, results) {
+                if (error) {
+                    console.log("DB Error in select query: user projects !!!");
+                    throw error;
+                } else {
+                    results.message = "List of the projects of user: ";
+                    console.log("Result message: " + results.message);
+                    res.status(201).json(results);
+                }
+            }, mysql_project_select_query);
         }
     }
   }, mysql_select_query)

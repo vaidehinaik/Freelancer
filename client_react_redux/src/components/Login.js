@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import cookie from 'react-cookies';
 import Octicon from 'react-octicon';
 import * as API from '../api/API';
 import {connect} from 'react-redux';
@@ -18,13 +19,18 @@ class Login extends Component {
           this.handlePasswordInput = this.handlePasswordInput.bind(this);
     }
 
+    componentWillMount() {
+      if(cookie.load('token')) {
+          this.props.history.push('/home');
+      }
+    }
+
     componentDidMount() {
       document.getElementById("loginErr").style.visibility = "hidden";
     }
 
     handleUsernameInput = (event) => {
       var lc_username = event.target.value.toLowerCase();
-      this.props.updateUsername(lc_username);
       this.setState({username: lc_username});
     }
 
@@ -70,6 +76,13 @@ class Login extends Component {
                   }
               }).then((json) => {
                   if (status === 201) {
+                      this.props.updateUsername({username: this.state.username,
+                                                 token: json.token});
+                      cookie.save('token', json.token, { path: '/' });
+                      this.setState({
+                          message: json.message
+                      });
+                      localStorage.setItem('username', this.state.username);
                       this.proceedToHome();
                   } else if (status === 401) {
                       const message = "Incorrect username or password. Try again !!!"
@@ -86,7 +99,7 @@ class Login extends Component {
                       this.displayErrMsg();
                       this.notify(message);
                   }
-          });
+              });
         }
     }
 
@@ -165,10 +178,10 @@ class Login extends Component {
 
   const mapDispatchToProps = (dispatch) => {
       return{
-          updateUsername: (username) => {
+          updateUsername: (payload) => {
               dispatch({
                   type: "USERNAME",
-                  payload : {username:username}
+                  payload : {username:payload.username, token: payload.token}
               });
           },
       };

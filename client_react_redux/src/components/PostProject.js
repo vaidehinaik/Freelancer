@@ -15,7 +15,6 @@ class PostProject extends Component {
         budgetLow: 0,
         budgetHigh: 0,
         projectSkills: [],
-        userProjects: [],
         message: ''
       };
       this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -35,11 +34,11 @@ class PostProject extends Component {
   }
 
   handleLowChange = (event) => {
-    this.setState({budgetLow: event.target.value});
+    this.setState({budgetLow: parseInt(event.target.value)});
   }
 
   handleHighChange = (event) => {
-    this.setState({budgetHigh: event.target.value});
+    this.setState({budgetHigh: parseInt(event.target.value)});
   }
 
   handleOptionChange = (event) => {
@@ -60,16 +59,43 @@ class PostProject extends Component {
     });
   }
 
+  notifySuccess = (message) => {
+    toast.success(message, {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000
+    });
+  }
+
+  componentDidMount() {
+    if (localStorage.getItem('username') === null) {
+        localStorage.setItem('username', this.props.pick.username);
+    }
+    this.setState({username: localStorage.getItem('username')});
+  }
+
+  componentWillUnmount() {
+    console.log("component will unmount");
+    localStorage.removeItem('username');
+  }
+
+  sleep = (time) => {
+      return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
   handleSubmit = (event) => {
     event.preventDefault();
+    console.log("my username is : "+ this.state.username);
+    console.log("state: " + JSON.stringify(this.state));
     if (this.state.title.length < 10) {
       this.notify("PROJECT NAME: Should be atleast 10 charcters long");
     } else if (this.state.description.length < 20) {
         this.notify("PROJECT DESCRIPTION: Should be atleast 20 characters long")
-    } else if (this.state.budgetLow == 0 || this.state.budgetHigh) {
+    } else if (this.state.budgetLow === 0 || this.state.budgetHigh === 0) {
         this.notify("BUDGET: Cannot be empty !!!")
     } else if(this.state.budgetHigh < this.state.budgetLow) {
         this.notify("'HIGHER BUDGET' value cannot be LESS than 'LOWER BUDGET' !!!")
+    } else if(this.state.projectSkills.length === 0) {
+        this.notify("Please select at least one skill before posting project !!!")
     } else {
       const projectInfo = {
                 username: this.state.username,
@@ -79,11 +105,12 @@ class PostProject extends Component {
                 budgetHigh: this.state.budgetHigh,
                 skills: this.state.projectSkills
               }
+      console.log("Posting Project with info: " + JSON.stringify(projectInfo));
       var status;
       API.postProject(projectInfo)
           .then((res) => {
               status = res.status;
-              try{
+              try {
                   return res.json();
               }
               catch(error) {
@@ -91,16 +118,21 @@ class PostProject extends Component {
               }
           }).then((json) => {
               if (status === 201) {
-                  console.log("Project posted successfully !!!");
-                  this.proceedToHome();
+                  const message = "Hurray !!! Project posted successfully.";
+                  console.log(message);
+                  this.notifySuccess(message);
+                  this.sleep(4000).then(() => {
+                    console.log("time to sleep");
+                    this.proceedToHome();
+                  });
               } else if (status === 401) {
-                  const message = "Failed to upload project. Try again !!!"
+                  const message = "Failed to upload project. Try again !!!";
                   this.setState({
                       message: message
                   });
                   this.notify(message);
               } else {
-                  const message = "Server error... Try again later !!!"
+                  const message = "Server error... Try again later !!!";
                   this.setState({
                       message: message
                   });
@@ -122,11 +154,12 @@ class PostProject extends Component {
             <Link to={`/home`} className="link">
                 <Octicon name="home" mega/>Home
             </Link>
-            {/*<Navbar/>*/}
           </div>
           <br></br><br></br>
+          <p><i><b>
+              Hi !!! {this.props.pick.username} ... Ready to post your project
+          </b></i></p><hr></hr>
           <div className="row justify-content-md-center">
-            {/*<div className="col-6">*/}
                 <form onSubmit={this.handleSubmit}>
                       <div className="form-group">
                           <h2><b>Tell us what you need done</b></h2>
@@ -204,10 +237,11 @@ class PostProject extends Component {
                           Freelancers will use these skills to find projects they
                           are most interested and experienced in.</p>
                           <select
+                              size="10"
                               multiple={true}
                               id="skills"
                               className="form-control"
-                              value={this.state.skills}
+                              value={this.state.projectSkills}
                               onChange={this.handleOptionChange}>
                                   <option>Java</option>
                                   <option>Python</option>
@@ -221,6 +255,8 @@ class PostProject extends Component {
                                   <option>MongoDB</option>
                                   <option>MySql</option>
                                   <option>HTML5</option>
+                                  <option>C</option>
+                                  <option>JavaScript</option>
                           </select>
                       </div>
                       <hr></hr>
@@ -228,20 +264,13 @@ class PostProject extends Component {
                       <div className="form-group">
                           <button
                               className="btn btn-primary"
-                              type="submit"
-                          >
+                              type="submit">
                               Post Project
                           </button>
                       </div>
                       <hr></hr>
                       <ToastContainer />
-                      {/*<div className="form-group">
-                          <div id="displayMsg" className="alert alert-danger">
-                              {this.state.message}
-                          </div>
-                      </div>*/}
                   </form>
-              {/*</div>*/}
               <br/>
             </div>
           </div>
@@ -256,9 +285,15 @@ const mapStateToProps = (state) => {
     };
 };
 
-{/*const mapDispatchToProps = (dispatch) => {
-    return {};
-};*/}
+const mapDispatchToProps = (dispatch) => {
+    return{
+        rehydrate: (username) => {
+            dispatch({
+                type: "persist/REHYDRATE",
+                payload : {username:username}
+            });
+        },
+    };
+};
 
-export default withRouter(connect(mapStateToProps)(PostProject));
-{/*export default withRouter(PostProject);*/}
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(PostProject));

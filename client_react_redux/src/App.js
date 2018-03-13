@@ -5,9 +5,10 @@ import Signup from './components/Signup';
 import Home from './components/Home';
 import PostProject from './components/PostProject';
 import Profile from './components/Profile';
-{/*import sample from './components/sample';*/}
+import EditProfile from './components/EditProfile';
 
 class App extends Component {
+
   render() {
     return (
       <div className="App">
@@ -18,7 +19,7 @@ class App extends Component {
                   <Route exact path="/home" component={Home}/>
                   <Route exact path="/postproject" component={PostProject}/>
                   <Route exact path="/profile" component={Profile}/>
-                  {/*<Route exact path="/sample" component={sample}/>*/}
+                  <Route exact path="/editprofile" component={EditProfile}/>
               </div>
           </BrowserRouter>
       </div>
