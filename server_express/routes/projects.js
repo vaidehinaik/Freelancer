@@ -2,10 +2,12 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt');
 var mysqlconn = require('../public/javascripts/dbServicesWithPool');
+var sql_queries = require('../public/javascripts/complexMySqlQueries');
 
 /*DB TABLES*/
 const USER_TABLE = "freelancer.users";
 const PROJECT_TABLE = "freelancer.projects";
+const PROJECT_BID_TABLE = "freelancer.projectbid";
 
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -19,7 +21,7 @@ router.post('/postproject', function(req, res) {
       console.log("DB Error in select query: post project !!!");
       throw error;
     } else {
-        if (results.length == 0) {
+        if (results.length === 0) {
             res.status(401).json({message: "Unauthorised user!!!"});
         } else {
             const userId = results[0].userId;
@@ -36,7 +38,7 @@ router.post('/postproject', function(req, res) {
                 } else {
                     console.log("Insert Id: " + results.insertId);
                     console.log("Rows affected: " + results.affectedRows);
-                    results.message = "Project posted successfully for user: " + results.insertId
+                    results.message = "Project posted successfully for user.";
                     console.log("Result message: " + results.message);
                     res.status(201).json(results);
                 }
@@ -46,61 +48,97 @@ router.post('/postproject', function(req, res) {
   }, mysql_select_query)
 });
 
-router.post('/allexceptuserprojects', function(req, res) {
-  console.log("Attempting to fetch all projects except those uploaded by user: " + req.body.username);
-  const mysql_select_query = "select * from " + USER_TABLE + " where username='" + req.body.username +"'";
+router.get('/allprojects', function(req, res) {
+  console.log("Attempting to fetch all projects.");
+  const mysql_select_query = sql_queries.get_all_projects_query_string();
   mysqlconn.selectData(function(error, results) {
     if (error) {
-      console.log("DB Error in select query: all except user project!!!");
+      console.log("DB Error in select query: all projects !!!");
       throw error;
+    } else if(results.length >= 0) {
+       res.status(201).json({message: "Returning all projects", results: results});
     } else {
-        if (results.length == 0) {
-            res.status(401).json({message: "Unauthorised user!!!"});
-        } else {
-            const userId = results[0].userId;
-            console.log("Found user with username: " + req.body.username + " & user id: " + userId);
-            const mysql_project_select_query = "SELECT * from " + PROJECT_TABLE + " where ownerUserId !=" + userId;
-
-            mysqlconn.selectData(function(error, results) {
-                if (error) {
-                    console.log("DB Error in select query: all except user project !!!");
-                    throw error;
-                } else {
-                    results.message = "List of the projects other than the user projects: ";
-                    console.log("Result message: " + results.message);
-                    res.status(201).json(results);
-                }
-            }, mysql_project_select_query);
-        }
+       res.status(401).json({message: "Unauthorised !!!"});
     }
   }, mysql_select_query)
 });
 
 router.post('/userprojects', function(req, res) {
-  console.log("Attempting to fetch all projects except those uploaded by user: " + req.body.username);
-  const mysql_select_query = "select * from " + USER_TABLE + " where username='" + req.body.username +"'";
+  console.log("Attempting to fetch user posted projects for username: " + req.body.username);
+  const mysql_select_query = sql_queries.get_user_projects_query_string(req.body.username);
   mysqlconn.selectData(function(error, results) {
     if (error) {
-      console.log("DB Error in select query: user projects!!!");
+      console.log("DB Error in select query: user posted projects !!!");
+      throw error;
+    } else if(results.length >= 0) {
+       res.status(201).json({message: "Returning user posted projects", results: results});
+    } else {
+       res.status(401).json({message: "Unauthorised !!!"});
+    }
+  }, mysql_select_query)
+});
+
+router.post('/userbidprojects', function(req, res) {
+  console.log("Attempting to fetch user bid projects for username: " + req.body.username);
+  const mysql_select_query = sql_queries.get_user_bid_projects_query_string(req.body.username);
+  mysqlconn.selectData(function(error, results) {
+    if (error) {
+      console.log("DB Error in select query: user bid projects !!!");
+      throw error;
+    } else if(results.length >= 0) {
+       res.status(201).json({message: "Returning user bid projects", results: results});
+    } else {
+       res.status(401).json({message: "Unauthorised !!!"});
+    }
+  }, mysql_select_query)
+});
+
+router.post('/projectandbids', function(req, res) {
+  console.log("Attempting to fetch the project details along with its bids: " + req.body.projectId);
+  const mysql_select_query = "select u.username, p.projectId, p.title, p.description, "
+                              + "p.budgetLow, p.budgetHigh, p.skills, p.status From "
+                              + USER_TABLE + " as u INNER JOIN " + PROJECT_TABLE
+                              + " as p on u.userId = p.ownerUserId AND p.projectId = '"
+                              + req.body.projectId + "'";
+  // const mysql_select_query = "select * from " + PROJECT_TABLE + " where projectId = '" + req.body.projectId +"'";
+  var resp_load = {projectDetails: {}, userProfilesWithBids: []};
+  mysqlconn.selectData(function(error, results) {
+    if (error) {
+      console.log("DB Error mysql_select_query project details !!!");
       throw error;
     } else {
-        if (results.length == 0) {
-            res.status(401).json({message: "Unauthorised user!!!"});
+        if (results.length === 0) {
+            res.status(401).json({message: "No project details found !!!"});
         } else {
-            const userId = results[0].userId;
-            console.log("Found user with username: " + req.body.username + " & user id: " + userId);
-            const mysql_project_select_query = "SELECT * from " + PROJECT_TABLE + " where ownerUserId =" + userId;
-
+            resp_load.projectDetails = results[0];
+            const mysql_query_users_from_bid = "SELECT userId from " + PROJECT_BID_TABLE + " where projectId =" + req.body.projectId;
             mysqlconn.selectData(function(error, results) {
                 if (error) {
-                    console.log("DB Error in select query: user projects !!!");
+                    console.log("DB Error: mysql_query_users_from_bid !!!");
                     throw error;
+                } else if (results.length === 0) {
+                    res.status(201).json(resp_load);
                 } else {
-                    results.message = "List of the projects of user: ";
-                    console.log("Result message: " + results.message);
-                    res.status(201).json(results);
+                    var ids = [];
+                    results.forEach(function(obj) {
+                        console.log("userId: " + obj.userId);
+                        ids.push(obj.userId);
+                    });
+                    const select_inner_join_query = "select u.userId, u.name, u.username, u.contact, u.aboutMe, "
+                                                    + "u.skills, pb.projectId, pb.bidAmount, pb.periodInDays From " +
+                                                    USER_TABLE + " as u INNER JOIN " + PROJECT_BID_TABLE +
+                                                    " as pb on u.userId = pb.userId AND u.userId IN (" + ids.join(',') + ")";
+                    mysqlconn.selectData(function(error, userResults) {
+                      if (error) {
+                            console.log("DB Error in: select_inner_join_query");
+                            throw error;
+                      } else {
+                        resp_load.userProfilesWithBids = userResults;
+                        res.status(201).json(resp_load);
+                      }
+                    }, select_inner_join_query)
                 }
-            }, mysql_project_select_query);
+            }, mysql_query_users_from_bid)
         }
     }
   }, mysql_select_query)

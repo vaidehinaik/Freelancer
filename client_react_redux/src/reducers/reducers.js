@@ -1,13 +1,14 @@
 const initialState = {
-    name: '',
     token: '',
     username: '',
+    projectId: '',
     skills: [],
-    contact: '',
-    aboutMe: '',
     userinfo: {},
     projects: [],
-    userProjects: []
+    userProjects: [],
+    userBidProjects: [],
+    projectDetails: {},
+    userProfilesWithBids: []
 }
 
 const reducers = (state = initialState, action) => {
@@ -20,6 +21,13 @@ const reducers = (state = initialState, action) => {
         };
     break;
 
+    case "PROJECTID":
+        state={
+          ...state,
+          projectId: action.payload.projectId
+        };
+    break;
+
     case "USERINFO":
         state={
           ...state,
@@ -27,16 +35,38 @@ const reducers = (state = initialState, action) => {
         };
     break;
 
+    case "PROJECT_DETAILS":
+        state={
+          ...state,
+          projectDetails: action.payload.projectDetails
+        };
+    break;
+
+    case "USER_PROFILES_WITH_BIDS":
+        state={
+          ...state,
+          userProfilesWithBids: action.payload.userProfilesWithBids
+        };
+    break;
+
+    case "REHYDRATE":
+        state={
+          ...state,
+          state: action.payload.persistState
+        };
+    break;
+
     case "RESET":
         state={
-            name: '',
+            token: '',
             username: '',
+            projectId: '',
             skills: [],
-            contact: '',
-            aboutMe: '',
             userinfo: {},
             projects: [],
-            userProjects: []
+            userProjects: [],
+            projectDetails: {},
+            userProfilesWithBids: []
         };
     break;
 

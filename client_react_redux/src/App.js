@@ -6,6 +6,7 @@ import Home from './components/Home';
 import PostProject from './components/PostProject';
 import Profile from './components/Profile';
 import EditProfile from './components/EditProfile';
+import ProjectAndBids from './components/ProjectAndBidDetails';
 
 class App extends Component {
 
@@ -20,6 +21,7 @@ class App extends Component {
                   <Route exact path="/postproject" component={PostProject}/>
                   <Route exact path="/profile" component={Profile}/>
                   <Route exact path="/editprofile" component={EditProfile}/>
+                  <Route exact path="/projectinfo" component={ProjectAndBids}/>
               </div>
           </BrowserRouter>
       </div>

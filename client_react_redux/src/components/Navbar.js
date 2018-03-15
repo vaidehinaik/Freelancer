@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
+import * as API from '../api/API';
 import { ToastContainer, toast } from 'react-toastify';
 import cookie from 'react-cookies';
 import {connect} from 'react-redux';
-import Octicon from 'react-octicon';
-import * as API from '../api/API';
+import ReactTooltip from 'react-tooltip';
+import HomeIcon from 'material-ui-icons/Home';
+import DashboardIcon from 'material-ui-icons/Dashboard';
+import AccountCircleIcon from 'material-ui-icons/AccountCircle';
+import AddCircleIcon from 'material-ui-icons/AddCircle';
+import PowerSettingsNewIcon from 'material-ui-icons/PowerSettingsNew';
 
 class Navbar extends Component {
 
@@ -27,7 +32,7 @@ class Navbar extends Component {
   notifySuccess = (message) => {
     toast.success(message, {
         position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000
+        autoClose: 2000
     });
   }
 
@@ -85,7 +90,7 @@ class Navbar extends Component {
                 this.notify(message);
             }
         });
-        this.sleep(4000).then(() => {
+        this.sleep(3000).then(() => {
           console.log("sleep & log out");
           this.performLogoutActions();
         });
@@ -105,37 +110,38 @@ class Navbar extends Component {
             </a>
             <ul className="navbar-nav mx-auto w-100 justify-content-center">
               <li className="nav-item active">
-                <Link to={`/home`} className="nav-link">
-                  <Octicon name="home" mega/>Home
+                <ReactTooltip />
+                <Link to={`/home`} className="nav-link" >
+                    <HomeIcon style={{ fontSize: 45 }} data-tip="Home"/>
                 </Link>
               </li>
-              <span>&nbsp;&nbsp;&nbsp;</span>
+              <li className="nav-item active">
+                <ReactTooltip />
+                <Link to={`/profile`} className="nav-link">
+                    <AccountCircleIcon style={{ fontSize: 45 }} data-tip="Profile"/>
+                  {/*<Octicon name="person" mega/>Profile*/}
+                </Link>
+              </li>
               <li className="nav-item active">
                 <Link to={`/profile`} className="nav-link">
-                  <Octicon name="person" mega/>Profile
+                  <ReactTooltip />
+                  <DashboardIcon style={{ fontSize: 45 }} data-tip="Dashboard"/>
                 </Link>
               </li>
               <span>&nbsp;&nbsp;&nbsp;</span>
               <li className="nav-item active">
-                <Link to={`/profile`} className="nav-link">
-                  <Octicon name="dashboard" mega spin/>Dashboard
-                </Link>
-              </li>
-              <span>&nbsp;&nbsp;&nbsp;</span>
-              <li className="nav-item active">
+                <ReactTooltip />
                 <Link to={`/postproject`} className="nav-link">
-                  <Octicon name="plus" mega/>Post Project
+                  <AddCircleIcon style={{ fontSize: 45 }} data-tip="Post Project"/>
                 </Link>
               </li>
             </ul>
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <button
-                    type="button"
-                    className="btn"
-                    onClick={this.logout}>
-                        <Octicon name="sign-out" mega/>Logout
-                </button>
+                <ReactTooltip />
+                <p onClick={this.logout}>
+                    <PowerSettingsNewIcon color="error" style={{ fontSize: 45 }} data-tip="Logout"/>
+                </p>
               </li>
             </ul>
           </nav>

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import * as API from '../api/API';
 import {connect} from 'react-redux';
+import ReactTooltip from 'react-tooltip';
 import HomeIcon from 'material-ui-icons/Home';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -21,7 +22,7 @@ class EditProfile extends Component {
       this.handleContactChange = this.handleContactChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
+
   handeNameChange = (event) => {
     this.setState({name: event.target.value});
   }
@@ -64,16 +65,22 @@ class EditProfile extends Component {
     });
   }
 
+  componentWillMount() {
+    var userinfo = localStorage.getItem('userinfo');
+    this.setState(
+      {
+        username: localStorage.getItem('username'),
+        name: userinfo.name,
+        contact: userinfo.contact,
+        aboutMe: userinfo.aboutMe,
+        skills: userinfo.skills
+      });
+  }
+
   componentDidMount() {
     if (localStorage.getItem('username') === null) {
         localStorage.setItem('username', this.props.pick.username);
     }
-    this.setState({username: localStorage.getItem('username')});
-  }
-
-  componentWillUnmount() {
-    console.log("component will unmount");
-    localStorage.removeItem('username');
   }
 
   sleep = (time) => {
@@ -82,8 +89,6 @@ class EditProfile extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log("my username is : "+ this.state.username);
-    console.log("state: " + JSON.stringify(this.state));
     const userInfo = {
                   username: this.state.username,
                   name: this.state.name,
@@ -130,7 +135,6 @@ class EditProfile extends Component {
   }
 
   render() {
-    console.log("my username is : "+ this.state.username);
     return (
       <div className="container-fluid">
         <div className="offset-md-3 col-md-6 ">
@@ -139,18 +143,19 @@ class EditProfile extends Component {
               <img src="/fl-logo.svg" height="120" width="180" className="left-block" alt="logo"/>
           </div>
           <div className="row">
+            <ReactTooltip/>
             <Link to={`/home`} className="link">
-                <HomeIcon/>
+                <HomeIcon color="primary" style={{ fontSize: 60 }} data-tip="Home"/>
             </Link>
           </div>
-          <br></br><br></br>
+          <br/>
           <div className="row justify-content-md-center">
           <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                     <h2><b>Edit User Profile -:- <i>{this.props.pick.username}</i></b></h2>
-                    <br></br>
+                    <br/>
                 </div>
-                <hr></hr>
+                <hr/>
 
                 <div className="form-group">
                     <label htmlFor="name"><b>Name:</b></label>
@@ -163,10 +168,10 @@ class EditProfile extends Component {
                         onChange={this.handeNameChange}
                     />
                 </div>
-                <hr></hr>
+                <hr/>
 
                 <div className="form-group">
-                    <br></br>
+                    <br/>
                     <label htmlFor="about"><b>About Me:</b></label>
                     <textarea
                         className="form-control"
@@ -177,10 +182,10 @@ class EditProfile extends Component {
                         onChange={this.handleAboutMeChange}
                     />
                 </div>
-                <hr></hr>
+                <hr/>
 
                 <div className="form-group">
-                    <br></br>
+                    <br/>
                     <label htmlFor="contact"><b>Contact:</b></label>
                     <input
                         className="form-control"
@@ -191,10 +196,10 @@ class EditProfile extends Component {
                         onChange={this.handleContactChange}
                     />
                 </div>
-                <hr></hr>
+                <hr/>
 
                 <div className="form-group">
-                    <br></br>
+                    <br/>
                     <label htmlFor="skills"><b>What skills are required?</b></label>
                     <p>Enter up to 5 skills that best describe your project.
                     Freelancers will use these skills to find projects they
@@ -204,7 +209,7 @@ class EditProfile extends Component {
                         id="skills"
                         size="10"
                         className="form-control"
-                        value={[]}
+                        value={this.state.skills}
                         onChange={this.handleOptionChange}>
                             <option>Java</option>
                             <option>Python</option>
@@ -222,16 +227,16 @@ class EditProfile extends Component {
                             <option>HTML5</option>
                     </select>
                 </div>
-                <hr></hr>
+                <hr/>
 
                 <div className="form-group">
                     <button
                         className="btn btn-primary"
                         type="submit">
-                        Post Project
+                        Save
                     </button>
                 </div>
-                <hr></hr>
+                <hr/>
                 <ToastContainer />
             </form>
             <br/>

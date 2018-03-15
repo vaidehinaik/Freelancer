@@ -4,6 +4,7 @@ import cookie from 'react-cookies';
 import * as API from '../api/API';
 import {connect} from 'react-redux';
 import Navbar from './Navbar';
+import ReactTooltip from 'react-tooltip';
 import InfoIcon from 'material-ui-icons/InfoOutline';
 
 class Home extends Component {
@@ -11,18 +12,30 @@ class Home extends Component {
       super(props)
       this.state = {
         name: '',
+        projectId: 1,
         username: '',
         projects: [],
         message: ''
       };
+      this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentWillMount() {
     console.log("Home will mount called ... ");
     if(cookie.load('token') === undefined) {
-      // Redirect to login page if cookie not found
+      /*Redirect to login page if cookie not found*/
       this.props.history.push('/');
     }
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    console.log("state project id :" + this.state.projectId);
+    console.log("event project id :" +event.target.value);
+    localStorage.setItem('projectId', 1);
+    this.setState({projectId: event.target.value});
+    this.props.updateProjectId(event.target.value);
+    this.props.history.push('/projectinfo');
   }
 
   render() {
@@ -41,7 +54,7 @@ class Home extends Component {
               <div className="form-group pull-right">
                 <input type="text" className="search form-control" placeholder="Search"/>
               </div>
-                <table className="table table-striped">
+                <table id="projects" className="table table-striped table-bordered">
                   <thead>
                       <tr>
                         <th scope="col">First</th>
@@ -56,9 +69,21 @@ class Home extends Component {
                       <td>K</td>
                       <td>sk@example.com</td>
                       <td scope="col">
-                        <Link to={`/postproject`} className="link">
+                        <p value = {this.state.projectId}
+                           onClick={this.handleSubmit}>
+                              <ReactTooltip/>
+                              <InfoIcon color="primary" style={{ fontSize: 25 }} data-tip="View Details"/>
+                        </p>
+                        {/*<button
+                            className="btn"
+                            value = {this.state.projectId}
+                            type="button"
+                            onClick={this.handleSubmit}>
+                                <InfoIcon/>
+                        </button>*/}
+                        {/*<Link to={`/postproject`} className="link">
                           <InfoIcon/>
-                        </Link>
+                        </Link>*/}
                       </td>
                     </tr>
                   </tbody>
@@ -77,7 +102,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        updateProjectId: (projectId) => {
+            dispatch({
+                type: "PROJECTID",
+                payload : {projectId:projectId}
+            });
+        }
     };
 };
 

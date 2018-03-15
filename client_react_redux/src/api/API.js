@@ -101,24 +101,71 @@ export const postProject = (payload) =>
         return error;
       });
 
-export const allExceptUserProjects = (payload) =>
-    fetch(`${api}/projects/allexceptuserprojects`, {
-      method: 'POST',
+export const allUserProjects = () =>
+    fetch(`${api}/projects/alluserprojects`, {
+      method: 'GET',
       headers: {
         ...headers,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(payload)
       }).then(res => {
         return res;
       })
       .catch(error => {
-        console.log("This is error in allExceptUserProjects");
+        console.log("This is error in allUserProjects");
         return error;
       });
 
-  export const userProjects = (payload) =>
+  export const userProjects = (username) =>
       fetch(`${api}/projects/userprojects`, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username: username})
+        }).then(res => {
+          return res;
+        })
+        .catch(error => {
+          console.log("This is error in userProjects");
+          return error;
+      });
+
+    export const userBidProjects = (username) =>
+        fetch(`${api}/projects/userbidprojects`, {
+          method: 'POST',
+          headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({username: username})
+          }).then(res => {
+            return res;
+          })
+          .catch(error => {
+            console.log("This is error in userBidProjects");
+            return error;
+        });
+
+  export const projectAndBids = (payload) =>
+      fetch(`${api}/projects/projectandbids`, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({projectId:payload.projectId})
+        }).then(res => {
+          return res;
+        })
+        .catch(error => {
+          console.log("This is error in projectAndBids");
+          return error;
+      });
+
+  export const userBid = (payload) =>
+      fetch(`${api}/projectBid/userbid`, {
         method: 'POST',
         headers: {
           ...headers,
@@ -129,6 +176,6 @@ export const allExceptUserProjects = (payload) =>
           return res;
         })
         .catch(error => {
-          console.log("This is error in allExceptUserProjects");
+          console.log("This is error in userbids");
           return error;
       });

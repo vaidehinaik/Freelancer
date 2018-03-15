@@ -3,6 +3,7 @@ import {Link, withRouter} from 'react-router-dom';
 import * as API from '../api/API';
 import cookie from 'react-cookies';
 import {connect} from 'react-redux';
+import ReactTooltip from 'react-tooltip';
 import EditIcon from 'material-ui-icons/Edit';
 import HomeIcon from 'material-ui-icons/Home';
 
@@ -57,8 +58,6 @@ class Profile extends Component {
             console.log("localstorage:" + localStorage.getItem('userinfo'));
             let jsondata = JSON.parse(localStorage.getItem('userinfo'));
             this.props.updateUserInfo(jsondata);
-          //  {/*const data = Object.assign({}, json);
-          //  this.props.updateUserInfo(data);*/}
           } else if (status === 401) {
             this.setState({
               message: "Something went wrong. Try again !!!"
@@ -76,7 +75,6 @@ class Profile extends Component {
 
   componentDidMount() {
     if (localStorage.getItem('userinfo') !== null) {
-      console.log("i m here ");
       let jsonData = JSON.parse(localStorage.getItem('userinfo'));
       this.setState({
         userId: jsonData.userId,
@@ -100,40 +98,42 @@ class Profile extends Component {
       return (
           <div className="container-fluid">
             <div className="offset-md-2 col-md-6">
-                <img src="/fl-logo.svg" height="80" width="120" className="left-block" alt="logo"/>
+                <img src="/fl-logo.svg" height="80" width="160" className="left-block" alt="logo"/>
             </div>
             <div className="offset-md-2 col-md-6 ">
               <Link to={`/home`} className="link">
-                  <HomeIcon/>
+                  <ReactTooltip />
+                  <HomeIcon style={{ fontSize: 60 }} data-tip="Home"/>
               </Link>
               <div className="panel panel-primary">
                 <div className="panel-body">
-                    <Link to={`/editprofile`} className="link">
-                        <EditIcon/>
-                    </Link>
-                    <br/><br/>
+                    <p className="float-right"><Link to={`/editprofile`} className="link">
+                        <ReactTooltip />
+                        <EditIcon style={{ fontSize: 30 }} data-tip="Edit Profile"/>
+                    </Link></p>
+                    <br/>
 
                     <h4><i>User Name:</i></h4>
                     <p><i>{this.props.pick.userinfo.username}</i></p>
-                    <br/><br/><br/><hr></hr>
+                    <br/><hr/>
 
                     <h4><i>Name:</i></h4>
                     <p>{this.props.pick.userinfo.name!=="null" ? this.props.pick.userinfo.name: "NA"}</p>
-                    <br/><br/><br/><hr></hr>
+                    <br/><hr/>
 
                     <h4><i>Contact:</i></h4>
                     <p>{this.props.pick.userinfo.contact!=="null" ? this.props.pick.userinfo.contact: "NA"}</p>
-                    <br/><br/><br/><hr></hr>
+                    <br/><hr/>
 
                     <h4>About:</h4>
                     <br/>
                     <p>{this.props.pick.userinfo.aboutMe!=="null" ? this.props.pick.userinfo.aboutMe: "NA"}</p>
-                    <br/><br/><br/><hr></hr>
+                    <br/><br/><hr/>
 
                     <h4>Skills:</h4>
                     <br/>
                     <p>{disp_skills}</p>
-                    <br/><br/><hr></hr>
+                    <br/><br/><hr/>
                 </div>
               </div>
             </div>

@@ -34,11 +34,11 @@ class PostProject extends Component {
   }
 
   handleLowChange = (event) => {
-    this.setState({budgetLow: parseInt(event.target.value)});
+    this.setState({budgetLow: parseInt(String, event.target.value)});
   }
 
   handleHighChange = (event) => {
-    this.setState({budgetHigh: parseInt(event.target.value)});
+    this.setState({budgetHigh: parseInt(String, event.target.value)});
   }
 
   handleOptionChange = (event) => {
