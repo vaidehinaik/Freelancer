@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import EditIcon from 'material-ui-icons/Edit';
 import HomeIcon from 'material-ui-icons/Home';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class Profile extends Component {
   constructor (props) {
@@ -96,6 +97,7 @@ class Profile extends Component {
           return <i key={key} value={skill}>{skill}<br/></i>
       })
       return (
+        <MuiThemeProvider>
           <div className="container-fluid">
             <div className="offset-md-2 col-md-6">
                 <img src="/fl-logo.svg" height="80" width="160" className="left-block" alt="logo"/>
@@ -107,10 +109,12 @@ class Profile extends Component {
               </Link>
               <div className="panel panel-primary">
                 <div className="panel-body">
-                    <p className="float-right"><Link to={`/editprofile`} className="link">
+                    <div className="float-right">
+                      <Link to={`/editprofile`} className="link">
                         <ReactTooltip />
                         <EditIcon style={{ fontSize: 30 }} data-tip="Edit Profile"/>
-                    </Link></p>
+                      </Link>
+                    </div>
                     <br/>
 
                     <h4><i>User Name:</i></h4>
@@ -138,6 +142,7 @@ class Profile extends Component {
               </div>
             </div>
           </div>
+        </MuiThemeProvider>
       );
     }
 }

@@ -4,12 +4,14 @@ import * as API from '../api/API';
 import { ToastContainer, toast } from 'react-toastify';
 import cookie from 'react-cookies';
 import {connect} from 'react-redux';
+import PowerSettingsNewIcon from 'material-ui-icons/PowerSettingsNew';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ReactTooltip from 'react-tooltip';
 import HomeIcon from 'material-ui-icons/Home';
 import DashboardIcon from 'material-ui-icons/Dashboard';
 import AccountCircleIcon from 'material-ui-icons/AccountCircle';
 import AddCircleIcon from 'material-ui-icons/AddCircle';
-import PowerSettingsNewIcon from 'material-ui-icons/PowerSettingsNew';
+import {blue500, red500, green600, lightBlue400} from 'material-ui/styles/colors';
 
 class Navbar extends Component {
 
@@ -98,6 +100,7 @@ class Navbar extends Component {
 
   render() {
       return (
+      <MuiThemeProvider>
         <div className="container-fluid">
           <nav className="navbar navbar-expand-md bg-light navbar-light">
             <a className="navbar-brand">
@@ -108,45 +111,44 @@ class Navbar extends Component {
                  alt="logo"/>
               <p><i>{this.props.pick.username}</i></p>
             </a>
-            <ul className="navbar-nav mx-auto w-100 justify-content-center">
+            <ul className="navbar-nav">
               <li className="nav-item active">
                 <ReactTooltip />
                 <Link to={`/home`} className="nav-link" >
-                    <HomeIcon style={{ fontSize: 45 }} data-tip="Home"/>
+                    <HomeIcon color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Home"/>
                 </Link>
               </li>
               <li className="nav-item active">
                 <ReactTooltip />
                 <Link to={`/profile`} className="nav-link">
-                    <AccountCircleIcon style={{ fontSize: 45 }} data-tip="Profile"/>
-                  {/*<Octicon name="person" mega/>Profile*/}
+                    <AccountCircleIcon color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Profile"/>
                 </Link>
               </li>
               <li className="nav-item active">
-                <Link to={`/profile`} className="nav-link">
+                <Link to={`/dashboard`} className="nav-link">
                   <ReactTooltip />
-                  <DashboardIcon style={{ fontSize: 45 }} data-tip="Dashboard"/>
+                  <DashboardIcon color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Dashboard"/>
                 </Link>
               </li>
-              <span>&nbsp;&nbsp;&nbsp;</span>
               <li className="nav-item active">
                 <ReactTooltip />
                 <Link to={`/postproject`} className="nav-link">
-                  <AddCircleIcon style={{ fontSize: 45 }} data-tip="Post Project"/>
+                  <AddCircleIcon color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Post Project"/>
                 </Link>
               </li>
             </ul>
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <ReactTooltip />
-                <p onClick={this.logout}>
-                    <PowerSettingsNewIcon color="error" style={{ fontSize: 45 }} data-tip="Logout"/>
-                </p>
+                <div onClick={this.logout}>
+                    <PowerSettingsNewIcon color={red500} hoverColor={green600} style={{width:50, height:50}} data-tip="Logout"/>
+                </div>
               </li>
             </ul>
           </nav>
           <ToastContainer />
         </div>
+      </MuiThemeProvider>
       );
   }
 }

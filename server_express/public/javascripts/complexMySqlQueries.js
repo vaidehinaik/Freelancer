@@ -5,7 +5,7 @@ exports.get_all_projects_query_string = () => {
                    "MAX(projects.status) as status, MAX(users.username) AS employer," +
                    "COUNT(projectbid.projectId) AS bidsCount," +
                    "(CASE WHEN AVG(projectbid.bidAmount) IS NULL THEN 0 ELSE AVG(projectbid.bidAmount) END) " +
-                   "AS averageBigAmount FROM projects LEFT OUTER JOIN projectbid "  +
+                   "AS averageBidAmount FROM projects LEFT OUTER JOIN projectbid "  +
                    "ON projects.projectId = projectbid.projectId " +
                    "INNER JOIN users ON projects.ownerUserId =  users.userId WHERE projects.status = 0 " +
                    "GROUP BY projects.projectId";
@@ -17,14 +17,14 @@ exports.get_user_projects_query_string = (username) => {
                            "MAX(projects.budgetHigh) as budgetHigh, MAX(projects.skills) as skills," +
                            "MAX(users.username) AS employer, COUNT(projectbid.projectId) AS bidsCount," +
                            "(CASE WHEN AVG(projectbid.bidAmount) IS NULL THEN 0 ELSE AVG(projectbid.bidamount) END) " +
-                           "AS averageBigAmount FROM projects LEFT OUTER JOIN projectbid ON " +
+                           "AS averageBidAmount FROM projects LEFT OUTER JOIN projectbid ON " +
                            "projects.projectId = projectbid.projectId INNER JOIN users ON projects.ownerUserId =  users.userId " +
                            "WHERE projects.status = 0 AND projects.owneruserid = (" +
                            "select userId from users where username = '" + username + "') " +
                            "GROUP BY projects.projectId";
             }
 exports.get_user_bid_projects_query_string = (username) => {
-                     return "SELECT A.title, A.employer, A.averageBidAmount, projectbid.bidAmount," +
+                     return "SELECT A.projectId, A.title, A.employer, A.averageBidAmount, projectbid.bidAmount," +
                             "A.status FROM projectbid INNER JOIN (" +
                              "SELECT projects.projectId," +
                              "MAX(projects.title) as title," +

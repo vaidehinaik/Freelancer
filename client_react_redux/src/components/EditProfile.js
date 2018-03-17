@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import HomeIcon from 'material-ui-icons/Home';
 import { ToastContainer, toast } from 'react-toastify';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class EditProfile extends Component {
   constructor (props) {
@@ -136,113 +137,115 @@ class EditProfile extends Component {
 
   render() {
     return (
-      <div className="container-fluid">
-        <div className="offset-md-3 col-md-6 ">
-          <br></br>
-          <div className="row">
-              <img src="/fl-logo.svg" height="120" width="180" className="left-block" alt="logo"/>
-          </div>
-          <div className="row">
-            <ReactTooltip/>
-            <Link to={`/home`} className="link">
-                <HomeIcon color="primary" style={{ fontSize: 60 }} data-tip="Home"/>
-            </Link>
-          </div>
-          <br/>
-          <div className="row justify-content-md-center">
-          <form onSubmit={this.handleSubmit}>
-                <div className="form-group">
-                    <h2><b>Edit User Profile -:- <i>{this.props.pick.username}</i></b></h2>
-                    <br/>
-                </div>
-                <hr/>
-
-                <div className="form-group">
-                    <label htmlFor="name"><b>Name:</b></label>
-                    <input
-                        className="form-control"
-                        id="name"
-                        type="text"
-                        placeholder="Name"
-                        value={this.state.name}
-                        onChange={this.handeNameChange}
-                    />
-                </div>
-                <hr/>
-
-                <div className="form-group">
-                    <br/>
-                    <label htmlFor="about"><b>About Me:</b></label>
-                    <textarea
-                        className="form-control"
-                        rows="10"
-                        id="about"
-                        placeholder='About Me.... Minimum 20 characters'
-                        value={this.state.aboutMe !== "null" ? this.state.aboutMe: ''}
-                        onChange={this.handleAboutMeChange}
-                    />
-                </div>
-                <hr/>
-
-                <div className="form-group">
-                    <br/>
-                    <label htmlFor="contact"><b>Contact:</b></label>
-                    <input
-                        className="form-control"
-                        type="text"
-                        id="contact"
-                        placeholder="Contact"
-                        value={this.state.contact !== "null" ? this.state.contact: ''}
-                        onChange={this.handleContactChange}
-                    />
-                </div>
-                <hr/>
-
-                <div className="form-group">
-                    <br/>
-                    <label htmlFor="skills"><b>What skills are required?</b></label>
-                    <p>Enter up to 5 skills that best describe your project.
-                    Freelancers will use these skills to find projects they
-                    are most interested and experienced in.</p>
-                    <select
-                        multiple={true}
-                        id="skills"
-                        size="10"
-                        className="form-control"
-                        value={this.state.skills}
-                        onChange={this.handleOptionChange}>
-                            <option>Java</option>
-                            <option>Python</option>
-                            <option>Scala</option>
-                            <option>Go</option>
-                            <option>React</option>
-                            <option>Express</option>
-                            <option>Django</option>
-                            <option>Bootstrap</option>
-                            <option>Jquery</option>
-                            <option>MongoDB</option>
-                            <option>MySql</option>
-                            <option>C</option>
-                            <option>JavaScript</option>
-                            <option>HTML5</option>
-                    </select>
-                </div>
-                <hr/>
-
-                <div className="form-group">
-                    <button
-                        className="btn btn-primary"
-                        type="submit">
-                        Save
-                    </button>
-                </div>
-                <hr/>
-                <ToastContainer />
-            </form>
+      <MuiThemeProvider>
+        <div className="container-fluid">
+          <div className="offset-md-3 col-md-6 ">
+            <br></br>
+            <div className="row">
+                <img src="/fl-logo.svg" height="120" width="180" className="left-block" alt="logo"/>
+            </div>
+            <div className="row">
+              <ReactTooltip/>
+              <Link to={`/home`} className="link">
+                  <HomeIcon color="primary" style={{ fontSize: 60 }} data-tip="Home"/>
+              </Link>
+            </div>
             <br/>
+            <div className="row justify-content-md-center">
+            <form onSubmit={this.handleSubmit}>
+                  <div className="form-group">
+                      <h2><b>Edit User Profile -:- <i>{this.props.pick.username}</i></b></h2>
+                      <br/>
+                  </div>
+                  <hr/>
+
+                  <div className="form-group">
+                      <label htmlFor="name"><b>Name:</b></label>
+                      <input
+                          className="form-control"
+                          id="name"
+                          type="text"
+                          placeholder="Name"
+                          value={this.state.name}
+                          onChange={this.handeNameChange}
+                      />
+                  </div>
+                  <hr/>
+
+                  <div className="form-group">
+                      <br/>
+                      <label htmlFor="about"><b>About Me:</b></label>
+                      <textarea
+                          className="form-control"
+                          rows="10"
+                          id="about"
+                          placeholder='About Me.... Minimum 20 characters'
+                          value={this.state.aboutMe !== "null" ? this.state.aboutMe: ''}
+                          onChange={this.handleAboutMeChange}
+                      />
+                  </div>
+                  <hr/>
+
+                  <div className="form-group">
+                      <br/>
+                      <label htmlFor="contact"><b>Contact:</b></label>
+                      <input
+                          className="form-control"
+                          type="text"
+                          id="contact"
+                          placeholder="Contact"
+                          value={this.state.contact !== "null" ? this.state.contact: ''}
+                          onChange={this.handleContactChange}
+                      />
+                  </div>
+                  <hr/>
+
+                  <div className="form-group">
+                      <br/>
+                      <label htmlFor="skills"><b>What skills are required?</b></label>
+                      <p>Enter up to 5 skills that best describe your project.
+                      Freelancers will use these skills to find projects they
+                      are most interested and experienced in.</p>
+                      <select
+                          multiple={true}
+                          id="skills"
+                          size="10"
+                          className="form-control"
+                          value={this.state.skills}
+                          onChange={this.handleOptionChange}>
+                              <option>Java</option>
+                              <option>Python</option>
+                              <option>Scala</option>
+                              <option>Go</option>
+                              <option>React</option>
+                              <option>Express</option>
+                              <option>Django</option>
+                              <option>Bootstrap</option>
+                              <option>Jquery</option>
+                              <option>MongoDB</option>
+                              <option>MySql</option>
+                              <option>C</option>
+                              <option>JavaScript</option>
+                              <option>HTML5</option>
+                      </select>
+                  </div>
+                  <hr/>
+
+                  <div className="form-group">
+                      <button
+                          className="btn btn-primary"
+                          type="submit">
+                          Save
+                      </button>
+                  </div>
+                  <hr/>
+                  <ToastContainer />
+              </form>
+              <br/>
+            </div>
           </div>
         </div>
-      </div>
+      </MuiThemeProvider>
     );
   }
 }

@@ -101,8 +101,8 @@ export const postProject = (payload) =>
         return error;
       });
 
-export const allUserProjects = () =>
-    fetch(`${api}/projects/alluserprojects`, {
+export const allProjects = () =>
+    fetch(`${api}/projects/allprojects`, {
       method: 'GET',
       headers: {
         ...headers,

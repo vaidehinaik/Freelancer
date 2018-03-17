@@ -5,25 +5,22 @@ import cookie from 'react-cookies';
 import {connect} from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import Navbar from './Navbar';
-
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import { withStyles } from 'material-ui/styles';
 import FaceIcon from 'material-ui-icons/Face';
 import PeopleIcon from 'material-ui-icons/People';
 import TimelineIcon from 'material-ui-icons/Timeline';
 import AttachMoneyIcon from 'material-ui-icons/AttachMoney';
 import DescriptionIcon from 'material-ui-icons/Description';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SentimentDissatisfiedIcon from 'material-ui-icons/SentimentDissatisfied';
 
 class ProjectAndBids extends Component {
 
-  /*get_initial_state() {
-    this.props.rehydrate(localStorage.getItem('reduxPersist:reducers'));
-  }*/
-
   constructor (props) {
       super(props)
       console.log("Project details constructor is called");
-      /*this.get_initial_state();*/
       this.state = {
         projectDetails: this.props.pick.projectDetails,
         userProfilesWithBids: this.props.pick.userProfilesWithBids,
@@ -83,6 +80,7 @@ class ProjectAndBids extends Component {
                               ? "" : <Bid bidrange={{low: this.props.pick.projectDetails.budgetLow,
                                                     high: this.props.pick.projectDetails.budgetHigh}}/>
       return (
+        <MuiThemeProvider>
           <div className="container-fluid">
             <div className="col-md-12">
                 <img src="/fl-logo.svg" height="80" width="120" className="left-block" alt="logo"/>
@@ -92,7 +90,7 @@ class ProjectAndBids extends Component {
               <div className="panel panel-primary">
                 <div className="panel-body">
                     <h2 className="text-center"><b>*** PROJECT DETAILS ***</b></h2>
-                    <DescriptionIcon color="primary" style={{ fontSize: 50 }}/>
+                    <DescriptionIcon style={{width:50, height:50}}/>
                     <hr/>
                     <h4><i>PROJECT TITLE:</i></h4>
                     <p><i>{this.props.pick.projectDetails.title}</i></p>
@@ -128,6 +126,7 @@ class ProjectAndBids extends Component {
 
             </div>
           </div>
+        </MuiThemeProvider>
       );
     }
 }
@@ -138,17 +137,17 @@ class UserProfiles extends Component {
     let userProfiles = <h2><i>
                         "No bidders yet"
                         <span>&nbsp;&nbsp;&nbsp;</span>
-                        <SentimentDissatisfiedIcon color="primary" style={{ fontSize: 50 }}/>
+                        <SentimentDissatisfiedIcon style={{width:50, height:50}}/>
                       </i></h2>;
     if (this.props.userProfiles.length != 0) {
-        userProfiles = this.props.userProfiles.map((userProfile) => {
-            return <div className="row"><ProfileCreator userProfile={userProfile}/></div>
+        userProfiles = this.props.userProfiles.map((userProfile, index) => {
+            return <div key={index} className="row"><ProfileCreator userProfile={userProfile}/></div>
       });
     }
     return (
       <div className="container-fluid">
         <h3><i><b>
-          <PeopleIcon color="primary" style={{ fontSize: 50 }}/>
+          <PeopleIcon style={{width:50, height:50}}/>
           <span>
             &nbsp;&nbsp;&nbsp;
           </span>
@@ -164,7 +163,7 @@ class UserProfiles extends Component {
 class ProfileCreator extends Component {
 
   handleAccept() {
-    
+
   }
 
   render () {
@@ -181,17 +180,8 @@ class ProfileCreator extends Component {
               <h4><i>Name:</i></h4>
               <p>{this.props.userProfile.name}</p>
               <hr/>
-              <h4><i>User Name:</i></h4>
-              <p>{this.props.userProfile.username}</p>
-              <hr/>
               <h4><i>Contact:</i></h4>
               <p>{this.props.userProfile.contact}</p>
-              <hr/>
-              <h4><i>About Me:</i></h4>
-              <p>{this.props.userProfile.aboutMe}</p>
-              <hr/>
-              <h4><i>Skills:</i></h4>
-              <p>{this.props.userProfile.skills}</p>
               <hr/>
               <h4><i><b>Bid Amount:</b></i></h4>
               <p>{this.props.userProfile.bidAmount}</p>
@@ -348,7 +338,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return{
+  return {
       projectInfo: (projectDetails) => {
           dispatch({
               type: "PROJECT_DETAILS",
@@ -366,8 +356,53 @@ const mapDispatchToProps = (dispatch) => {
               type: "REHYDRATE",
               payload : {persistState:persistState}
           });
-      },
+      }
   };
 };
+
+class DialogBox extends Component {
+  constructor (props) {
+      super(props)
+      this.state = {
+      };
+      this.handleOpen = this.handleOpen.bind(this);
+      open: false
+      this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleOpen = () => {
+    this.setState({open: true});
+  };
+
+  handleClose = () => {
+    this.setState({open: false});
+  };
+
+  render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onClick={this.handleClose}
+      />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleClose}
+      />];
+
+    return (
+      <Dialog
+        title="Dialog With Actions"
+        actions={actions}
+        modal={false}
+        open={this.state.open}
+        onRequestClose={this.handleClose}>
+        The actions in this window were passed in as an array of React objects.
+     </Dialog>
+   );
+  }
+}
 
 export default withRouter(connect(mapStateToProps,mapDispatchToProps)(ProjectAndBids));

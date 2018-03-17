@@ -4,7 +4,7 @@ const initialState = {
     projectId: '',
     skills: [],
     userinfo: {},
-    projects: [],
+    allProjects: [],
     userProjects: [],
     userBidProjects: [],
     projectDetails: {},
@@ -21,7 +21,7 @@ const reducers = (state = initialState, action) => {
         };
     break;
 
-    case "PROJECTID":
+    case "PROJECT_ID":
         state={
           ...state,
           projectId: action.payload.projectId
@@ -39,6 +39,27 @@ const reducers = (state = initialState, action) => {
         state={
           ...state,
           projectDetails: action.payload.projectDetails
+        };
+    break;
+
+    case "ALL_PROJECTS":
+        state={
+          ...state,
+          allProjects: action.payload.allProjects
+        };
+    break;
+
+    case "USER_PROJECTS":
+        state={
+          ...state,
+          userProjects: action.payload.userProjects
+        };
+    break;
+
+    case "USER_BID_PROJECTS":
+        state={
+          ...state,
+          userBidProjects: action.payload.userBidProjects
         };
     break;
 
@@ -63,8 +84,9 @@ const reducers = (state = initialState, action) => {
             projectId: '',
             skills: [],
             userinfo: {},
-            projects: [],
+            allProjects: [],
             userProjects: [],
+            userBidProjects: [],
             projectDetails: {},
             userProfilesWithBids: []
         };

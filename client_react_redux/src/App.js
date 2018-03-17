@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import {BrowserRouter, Route} from 'react-router-dom';
+import Home from './components/Home';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import Home from './components/Home';
-import PostProject from './components/PostProject';
 import Profile from './components/Profile';
+import Dashboard from './components/Dashboard';
+import PostProject from './components/PostProject';
 import EditProfile from './components/EditProfile';
 import ProjectAndBids from './components/ProjectAndBidDetails';
 
@@ -22,6 +23,7 @@ class App extends Component {
                   <Route exact path="/profile" component={Profile}/>
                   <Route exact path="/editprofile" component={EditProfile}/>
                   <Route exact path="/projectinfo" component={ProjectAndBids}/>
+                  <Route exact path="/dashboard" component={Dashboard}/>
               </div>
           </BrowserRouter>
       </div>

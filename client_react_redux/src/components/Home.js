@@ -6,90 +6,170 @@ import {connect} from 'react-redux';
 import Navbar from './Navbar';
 import ReactTooltip from 'react-tooltip';
 import InfoIcon from 'material-ui-icons/InfoOutline';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Paper from 'material-ui/Paper';
+import {
+  Table,
+  TableBody,
+  TableFooter,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn
+} from 'material-ui/Table';
+
+const paperStyle = {
+  height: "100%",
+  width: "100%",
+  margin: 10,
+  textAlign: 'center',
+  display: 'inline-block',
+};
+
 
 class Home extends Component {
+
   constructor (props) {
       super(props)
       this.state = {
         name: '',
-        projectId: 1,
         username: '',
-        projects: [],
-        message: ''
+        message: '',
+        allProjects: [],
+        fixedHeader: false,
+        stripedRows: true,
+        showRowHover: true,
+        selectable: true,
+        multiSelectable: false,
+        enableSelectAll: false,
+        deselectOnClickaway: true,
+        showCheckboxes: true,
+        height: '300px'
       };
-      this.handleSubmit = this.handleSubmit.bind(this);
+
+      this.handleChange = this.handleChange.bind(this);
+      this.navigateToProjectInfo = this.navigateToProjectInfo.bind(this);
   }
 
-  componentWillMount() {
-    console.log("Home will mount called ... ");
+  handleChange = (event) => {
+    this.setState({height: event.target.value});
+  };
+
+  navigateToProjectInfo = (row_key) => {
+    if (row_key.length === 0) {
+      return;
+    }
+    console.log(row_key);
+    localStorage.setItem('projectId', this.props.pick.allProjects[row_key].projectId)
+    this.sleep(1000).then(() => {
+      this.props.history.push('/projectinfo');
+    });
+  }
+
+  sleep = (time) => {
+      return new Promise((resolve) => setTimeout(resolve, time));
+  }
+
+  componentDidMount() {
+    console.log("willmount Home called ... ");
     if(cookie.load('token') === undefined) {
       /*Redirect to login page if cookie not found*/
       this.props.history.push('/');
+    } else {
+      var status;
+      API.allProjects()
+        .then((res) => {
+          status = res.status;
+          try {
+            return res.json();
+          } catch(error) {
+            console.log("Error in response: " + error);
+          }
+        }).then((json) => {
+          if(status === 201) {
+            localStorage.setItem('allProjects', JSON.stringify(json.results));
+            this.props.storeAllProjects(JSON.parse(localStorage.getItem('allProjects')));
+            this.setState({
+              allProjects: JSON.parse(localStorage.getItem('allProjects')),
+              message: json.message
+            });
+          } else if (status === 401) {
+              this.setState({
+                  message: json.message
+              });
+          } else {
+              const message = "Failed to load all projects ... try again later !!!"
+              this.setState({
+                  message: message
+              });
+          }
+        });
     }
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-    console.log("state project id :" + this.state.projectId);
-    console.log("event project id :" +event.target.value);
-    localStorage.setItem('projectId', 1);
-    this.setState({projectId: event.target.value});
-    this.props.updateProjectId(event.target.value);
-    this.props.history.push('/projectinfo');
   }
 
   render() {
       return (
-          <div className="container-fluid">
-            <div className="row offset-md-1">
-                <img src="/fl-logo.svg" height="80" width="120" className="left-block" alt="logo"/>
-            </div>
-            <div className="row">
-              <Navbar/>
-            </div>
-            <div className="col-md-12 ">
-              <div className="form-group">
-                <h4><i>Available Projects:</i></h4>
+        <MuiThemeProvider>
+          <div className="container">
+            <Paper style={paperStyle} zDepth={4}>
+              <div className="row mx-auto">
+                <div className="col-sm-6 col-sm-offset-3">
+                  <img src="/fl-logo.svg" height="120" width="160" className="left-block" alt="logo"/>
+                </div>
+                <div className="col-md-12 col-md-offset-2 mx-auto">
+                  <Navbar />
+                </div>
               </div>
-              <div className="form-group pull-right">
-                <input type="text" className="search form-control" placeholder="Search"/>
+              <div className="col-sm-12">
+                  <Table
+                      onRowSelection={this.navigateToProjectInfo}
+                      style={{height: "100%", width: "100%", tableLayout: "auto"}}
+                      height={this.state.height}
+                      fixedHeader={this.state.fixedHeader}
+                      selectable={this.state.selectable}
+                      multiSelectable={this.state.multiSelectable}>
+                      <TableHeader
+                        displaySelectAll={this.state.showCheckboxes}
+                        adjustForCheckbox={this.state.showCheckboxes}
+                        enableSelectAll={this.state.enableSelectAll}>
+                          <TableRow>
+                            <TableHeaderColumn colSpan="7" tooltip="" style={{textAlign: 'left'}}>
+                              <h3><b><i>Freelancer Projects</i></b></h3>
+                            </TableHeaderColumn>
+                          </TableRow>
+                          <TableRow>
+                            <TableHeaderColumn tooltip="Project Number">#</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="The Project">Project</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Project Owner">Employer</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Total Bids">Bids Count</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Average Bid Amount">Avg Bid ($)</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Low Budget ($)">Lower Budget ($)</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="High Budget ($)">Higher Budget ($)</TableHeaderColumn>
+                          </TableRow>
+                      </TableHeader>
+                      <TableBody
+                        displayRowCheckbox={this.state.showCheckboxes}
+                        deselectOnClickaway={this.state.deselectOnClickaway}
+                        showRowHover={this.state.showRowHover}
+                        stripedRows={this.state.stripedRows}>
+                        {
+                          this.props.pick.allProjects.map((project, index) => (
+                            <TableRow key={index}>
+                              <TableRowColumn>{index+1}</TableRowColumn>
+                              <TableRowColumn>{project.title}</TableRowColumn>
+                              <TableRowColumn>{project.employer}</TableRowColumn>
+                              <TableRowColumn>{project.bidsCount}</TableRowColumn>
+                              <TableRowColumn>{project.averageBidAmount}</TableRowColumn>
+                              <TableRowColumn>{project.budgetLow}</TableRowColumn>
+                              <TableRowColumn>{project.budgetHigh}</TableRowColumn>
+                            </TableRow>
+                        ))}
+                      </TableBody>
+                  </Table>
               </div>
-                <table id="projects" className="table table-striped table-bordered">
-                  <thead>
-                      <tr>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">View</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Sushant</td>
-                      <td>K</td>
-                      <td>sk@example.com</td>
-                      <td scope="col">
-                        <p value = {this.state.projectId}
-                           onClick={this.handleSubmit}>
-                              <ReactTooltip/>
-                              <InfoIcon color="primary" style={{ fontSize: 25 }} data-tip="View Details"/>
-                        </p>
-                        {/*<button
-                            className="btn"
-                            value = {this.state.projectId}
-                            type="button"
-                            onClick={this.handleSubmit}>
-                                <InfoIcon/>
-                        </button>*/}
-                        {/*<Link to={`/postproject`} className="link">
-                          <InfoIcon/>
-                        </Link>*/}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            </Paper>
           </div>
+        </MuiThemeProvider>
       );
     }
 }
@@ -104,10 +184,16 @@ const mapDispatchToProps = (dispatch) => {
     return {
         updateProjectId: (projectId) => {
             dispatch({
-                type: "PROJECTID",
+                type: "PROJECT_ID",
                 payload : {projectId:projectId}
             });
-        }
+        },
+        storeAllProjects: (allProjects) => {
+            dispatch({
+                type: "ALL_PROJECTS",
+                payload : {allProjects:allProjects}
+            });
+        },
     };
 };
 
