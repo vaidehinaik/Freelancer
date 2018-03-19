@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt');
+// With connection pool
 var mysqlconn = require('../public/javascripts/dbServicesWithPool');
+// With single mysql connector
+// var mysqlconn = require('../public/javascripts/dbServicesNoPool');
 
 /*Salt round for hashing password*/
 const saltRounds = 10;

@@ -1,13 +1,14 @@
 var mysql = require('mysql');
 
-//Put your mysql configuration settings - user, password, database and port
-export const getConnection = () => {
-  	var connection = mysql.createConnection({
-  		host     : 'localhost',
-  		user     : 'root',
-  		password : 'root',
-  		database : 'test',
-  		port	 : 3306
-  	});
-  	return connection;
-}
+var db_config = {
+						host     : 'localhost',
+						user     : 'root',
+						password : 'admin',
+						database : 'freelancer'
+					}
+
+// mysql connection
+var connection =  mysql.createConnection(db_config);
+console.log("Mysql Connection is set ...")
+
+module.exports = connection;

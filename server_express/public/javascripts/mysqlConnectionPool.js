@@ -9,7 +9,6 @@ var pool_config = {
 					}
 // connection pool
 var pool =  mysql.createPool(pool_config);
-// console.log(pool.config)
 console.log("Connection pool is set ...")
 
 module.exports = pool;
