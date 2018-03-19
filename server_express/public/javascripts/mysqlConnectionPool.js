@@ -4,7 +4,7 @@ var pool_config = {
 						connectionLimit: 100,
 						host     : 'localhost',
 						user     : 'root',
-						password : 'mysqlsk',
+						password : 'admin',
 						database : 'freelancer'
 					}
 // connection pool

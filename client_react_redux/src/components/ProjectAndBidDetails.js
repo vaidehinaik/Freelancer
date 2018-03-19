@@ -51,6 +51,9 @@ class ProjectAndBids extends Component {
         }).then((json) => {
           console.log("project and bids info: " + JSON.stringify(json));
           if (status === 201) {
+            localStorage.setItem('projectDetails', JSON.stringify(json.projectDetails));
+            localStorage.setItem('userProfilesWithBids', JSON.stringify(json.userProfilesWithBids));
+
             this.props.usersInfoWithBids(json.userProfilesWithBids);
             this.props.projectInfo(json.projectDetails);
 
@@ -89,29 +92,37 @@ class ProjectAndBids extends Component {
                 <Navbar/>
               <div className="panel panel-primary">
                 <div className="panel-body">
-                    <h2 className="text-center"><b>*** PROJECT DETAILS ***</b></h2>
-                    <DescriptionIcon style={{width:50, height:50}}/>
-                    <hr/>
-                    <h4><i>PROJECT TITLE:</i></h4>
-                    <p><i>{this.props.pick.projectDetails.title}</i></p>
-                    <hr/>
+                  <h2 className="text-center"><b>*** PROJECT DETAILS ***</b></h2>
+                  <DescriptionIcon style={{width:50, height:50}}/>
+                  <hr/>
+                  <h4><i>EMPLOYER:</i></h4>
+                  <p><i>{this.props.pick.projectDetails.name}</i></p>
+                  <hr/>
 
-                    <h4><i>PROJECT DESCRIPTION:</i></h4>
-                    <p>{this.props.pick.projectDetails.description}</p>
-                    <hr/>
+                  <h4><i>CONTACT:</i></h4>
+                  <p><i>{this.props.pick.projectDetails.contact}</i></p>
+                  <hr/>
 
-                    <h4><i>LOWER BUDGET:</i></h4>
-                    <p>{this.props.pick.projectDetails.budgetLow}</p>
-                    <hr/>
+                  <h4><i>PROJECT TITLE:</i></h4>
+                  <p><i>{this.props.pick.projectDetails.title}</i></p>
+                  <hr/>
 
-                    <h4><i>HIGHER BUDGET:</i></h4>
-                    <p>{this.props.pick.projectDetails.budgetHigh}</p>
-                    <hr/>
+                  <h4><i>PROJECT DESCRIPTION:</i></h4>
+                  <p>{this.props.pick.projectDetails.description}</p>
+                  <hr/>
 
-                    <h4><i>SKILLS REQUIRED:</i></h4>
-                    <p>{this.props.pick.projectDetails.skills}</p>
-                    <hr/>
-                    {BidForm}
+                  <h4><i>LOWER BUDGET:</i></h4>
+                  <p>{this.props.pick.projectDetails.budgetLow}</p>
+                  <hr/>
+
+                  <h4><i>HIGHER BUDGET:</i></h4>
+                  <p>{this.props.pick.projectDetails.budgetHigh}</p>
+                  <hr/>
+
+                  <h4><i>SKILLS REQUIRED:</i></h4>
+                  <p>{this.props.pick.projectDetails.skills}</p>
+                  <hr/>
+                  {BidForm}
                 </div>
               </div>
               <div className="panel panel-primary">
@@ -161,37 +172,90 @@ class UserProfiles extends Component {
 }
 
 class ProfileCreator extends Component {
+  constructor (props) {
+        super(props)
+        this.state = {
+          message: ''
+        };
+        this.notifySuccess = this.notifySuccess.bind(this);
+        this.notify = this.notify.bind(this);
+  }
+
+  notify = (message) => {
+    toast.error(message, {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 3000
+    });
+  }
+
+  notifySuccess = (message) => {
+    toast.success(message, {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 3000
+    });
+  }
 
   handleAccept() {
-
+    var status;
+    API.acceptBid(localStorage.getItem('projectId'))
+        .then((res) => {
+            status = res.status;
+            return res.json();
+        }).then((json) => {
+            if (status === 201) {
+                this.setState({
+                    message: json.message
+                });
+                this.notifySuccess(json.message);
+            } else if (status === 200) {
+                this.setState({
+                    message: json.message
+                });
+                this.notifySuccess(json.message);
+            } else if (status === 401) {
+                const message = "Something went wrong. Try signing up again !!!"
+                this.setState({
+                    message: message
+                });
+                this.notify(message);
+            } else {
+                const message = "Server error... Try signing up later !!!"
+                this.setState({
+                    message: message
+                });
+                this.notify(message);
+            }
+    });
   }
 
   render () {
-    let acceptButton = localStorage.getItem('username') ===
-                                          this.props.userProfile.username
-                                              ? "" : <button className="btn btn-success"
-                                                              type="button"
-                                                              onClick={this.handleAccept}>
-                                                          Accept
-                                                      </button>
+    let prj_details = JSON.parse(localStorage.getItem('projectDetails'));
+    let acceptButton = localStorage.getItem('username') === prj_details.username ? <button className="btn btn-success"
+                                                                                          type="button"
+                                                                                          onClick={this.handleAccept.bind(this)}>
+                                                                                      Accept
+                                                                                    </button>: "";
     return (
-          <div className="col">
-              <FaceIcon color="primary" style={{ fontSize: 30 }}/>
-              <h4><i>Name:</i></h4>
-              <p>{this.props.userProfile.name}</p>
-              <hr/>
-              <h4><i>Contact:</i></h4>
-              <p>{this.props.userProfile.contact}</p>
-              <hr/>
-              <h4><i><b>Bid Amount:</b></i></h4>
-              <p>{this.props.userProfile.bidAmount}</p>
-              <hr/>
-              <h4><i><b>Time Estimation in Days:</b></i></h4>
-              <p>{this.props.userProfile.periodInDays}</p>
-              <br/><hr/>
-              {acceptButton}
-              <br/><hr/><hr/>
-          </div>
+      <div className="col">
+        <FaceIcon color="primary" style={{ fontSize: 30 }}/>
+        <h4><i>Name:</i></h4>
+        <p>{this.props.userProfile.name}</p>
+        <hr/>
+        <h4><i>Contact:</i></h4>
+        <p>{this.props.userProfile.contact}</p>
+        <hr/>
+        <h4><i><b>Bid Amount:</b></i></h4>
+        <p>{this.props.userProfile.bidAmount}</p>
+        <hr/>
+        <h4><i><b>Time Estimation in Days:</b></i></h4>
+        <p>{this.props.userProfile.periodInDays}</p>
+        <br/><hr/>
+        {acceptButton}
+        <br/><hr/><hr/>
+        <div className="form-group">
+          <ToastContainer />
+        </div>
+      </div>
     );
   }
 }
@@ -215,7 +279,7 @@ class Bid extends Component {
   notify = (message) => {
     toast.error(message, {
         position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 4000
+        autoClose: 3000
     });
   }
 
@@ -249,7 +313,6 @@ class Bid extends Component {
                   + this.props.bidrange.high);
     } else {
       var status;
-      console.log("my current state is: + " + JSON.stringify(this.state));
       API.userBid(this.state)
           .then((res) => {
               status = res.status;
@@ -263,7 +326,7 @@ class Bid extends Component {
               if (status === 201) {
                   this.notifySuccess(json.message);
               } else if (status === 401) {
-                  this.notify("Failed to submit your bid. Try again !!!");
+                  this.notify("Failed to close the project. Try again !!!");
               } else {
                   this.notify("Server error... Try again later !!!");
               }
@@ -278,50 +341,50 @@ class Bid extends Component {
           <div className="panel panel-primary">
             <div className="panel-body">
               <form>
-                  <div className="form-group">
-                      <label htmlFor="BidAmount">
-                        <b><AttachMoneyIcon color="primary" style={{ fontSize: 10 }}/></b>
-                        <span>&nbsp;Amount: &nbsp;</span>
-                      </label>
-                      <input
-                          className="form-control"
-                          type="text"
-                          id="BidAmount"
-                          placeholder="Amount ($)"
-                          required="required"
-                          value={this.state.bidAmount}
-                          onChange={this.handleBidAmount}
-                      />
-                  </div>
+                <div className="form-group">
+                    <label htmlFor="BidAmount">
+                      <b><AttachMoneyIcon color="primary" style={{ fontSize: 10 }}/></b>
+                      <span>&nbsp;Amount: &nbsp;</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="text"
+                        id="BidAmount"
+                        placeholder="Amount ($)"
+                        required="required"
+                        value={this.state.bidAmount}
+                        onChange={this.handleBidAmount}
+                    />
+                </div>
 
-                  <div className="form-group">
-                      <label htmlFor="PeriodInDays">
-                        <b><TimelineIcon color="primary" style={{ fontSize: 10 }}/></b>
-                        <span>&nbsp;&nbsp;Estimated Time in Days &nbsp;</span>
-                      </label>
-                      <input
-                          className="form-control"
-                          type="text"
-                          id="PeriodInDays"
-                          placeholder="Time in Days"
-                          required="required"
-                          value={this.state.periodInDays}
-                          onChange={this.handlePeriodInDays}
-                      />
-                  </div>
+                <div className="form-group">
+                    <label htmlFor="PeriodInDays">
+                      <b><TimelineIcon color="primary" style={{ fontSize: 10 }}/></b>
+                      <span>&nbsp;&nbsp;Estimated Time in Days &nbsp;</span>
+                    </label>
+                    <input
+                        className="form-control"
+                        type="text"
+                        id="PeriodInDays"
+                        placeholder="Time in Days"
+                        required="required"
+                        value={this.state.periodInDays}
+                        onChange={this.handlePeriodInDays}
+                    />
+                </div>
 
-                  <div className="form-group">
-                      <button
-                          className="btn btn-primary"
-                          type="button"
-                          onClick={this.handleSubmit}>
-                              Bid
-                      </button>
-                      <hr></hr>
-                  </div>
-                  <div className="form-group">
-                      <ToastContainer />
-                  </div>
+                <div className="form-group">
+                    <button
+                        className="btn btn-primary"
+                        type="button"
+                        onClick={this.handleSubmit}>
+                            Bid
+                    </button>
+                    <hr></hr>
+                </div>
+                <div className="form-group">
+                    <ToastContainer />
+                </div>
               </form>
             </div>
           </div>
@@ -359,50 +422,5 @@ const mapDispatchToProps = (dispatch) => {
       }
   };
 };
-
-class DialogBox extends Component {
-  constructor (props) {
-      super(props)
-      this.state = {
-      };
-      this.handleOpen = this.handleOpen.bind(this);
-      open: false
-      this.handleClose = this.handleClose.bind(this);
-  }
-
-  handleOpen = () => {
-    this.setState({open: true});
-  };
-
-  handleClose = () => {
-    this.setState({open: false});
-  };
-
-  render() {
-    const actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onClick={this.handleClose}
-      />,
-      <FlatButton
-        label="Submit"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.handleClose}
-      />];
-
-    return (
-      <Dialog
-        title="Dialog With Actions"
-        actions={actions}
-        modal={false}
-        open={this.state.open}
-        onRequestClose={this.handleClose}>
-        The actions in this window were passed in as an array of React objects.
-     </Dialog>
-   );
-  }
-}
 
 export default withRouter(connect(mapStateToProps,mapDispatchToProps)(ProjectAndBids));

@@ -5,7 +5,39 @@ import {connect} from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import HomeIcon from 'material-ui-icons/Home';
 import { ToastContainer, toast } from 'react-toastify';
+import ChipInput from 'material-ui-chip-input';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {blue500, red500, green600} from 'material-ui/styles/colors';
+
+const styles = {
+  chip: {
+    margin: 4
+  },
+  wrapper: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  }
+}
+
+const skill_data = [
+  "Java",
+  "Python",
+  "Go",
+  "Scala",
+  "React",
+  "Express",
+  "Django",
+  "Bootstrap",
+  "Jquery",
+  "Php",
+  "MongoDB",
+  "C",
+  "MySql",
+  "HTML5",
+  "JavaScript",
+];
+
+const user_skills = [];
 
 class EditProfile extends Component {
   constructor (props) {
@@ -36,16 +68,9 @@ class EditProfile extends Component {
     this.setState({contact: event.target.value});
   }
 
-  handleOptionChange = (event) => {
-    var skills = this.state.skills;
-    if (skills.includes("Add skills to your profile")) {
-      const index = skills.indexOf("Add skills to your profile");
-      skills.splice(index, 1);
-    }
-    if (!skills.includes(event.target.value)) {
-      skills.push(event.target.value);
-      this.setState({skills: skills});
-    }
+  handleChange(chips) {
+    console.log("my chips: "+ JSON.stringify(chips));
+    this.setState({skills: chips});
   }
 
   proceedToProfile() {
@@ -67,7 +92,8 @@ class EditProfile extends Component {
   }
 
   componentWillMount() {
-    var userinfo = localStorage.getItem('userinfo');
+    console.log("compoinenet ewill vmounta ");
+    var userinfo = JSON.parse(localStorage.getItem('userinfo'));
     this.setState(
       {
         username: localStorage.getItem('username'),
@@ -76,12 +102,14 @@ class EditProfile extends Component {
         aboutMe: userinfo.aboutMe,
         skills: userinfo.skills
       });
+    console.log("user profile123: "+ JSON.stringify(this.state));
   }
 
   componentDidMount() {
     if (localStorage.getItem('username') === null) {
         localStorage.setItem('username', this.props.pick.username);
     }
+    console.log("user profile: "+ JSON.stringify(this.state));
   }
 
   sleep = (time) => {
@@ -147,99 +175,83 @@ class EditProfile extends Component {
             <div className="row">
               <ReactTooltip/>
               <Link to={`/home`} className="link">
-                  <HomeIcon color="primary" style={{ fontSize: 60 }} data-tip="Home"/>
+                  <HomeIcon color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Home"/>
               </Link>
             </div>
             <br/>
             <div className="row justify-content-md-center">
             <form onSubmit={this.handleSubmit}>
-                  <div className="form-group">
-                      <h2><b>Edit User Profile -:- <i>{this.props.pick.username}</i></b></h2>
-                      <br/>
-                  </div>
-                  <hr/>
+                <div className="form-group">
+                    <h2><b>Edit User Profile -:- <i>{this.props.pick.username}</i></b></h2>
+                    <br/>
+                </div>
+                <hr/>
 
-                  <div className="form-group">
-                      <label htmlFor="name"><b>Name:</b></label>
-                      <input
-                          className="form-control"
-                          id="name"
-                          type="text"
-                          placeholder="Name"
-                          value={this.state.name}
-                          onChange={this.handeNameChange}
-                      />
-                  </div>
-                  <hr/>
+                <div className="form-group">
+                  <label htmlFor="name"><b>Name:</b></label>
+                  <input
+                      className="form-control"
+                      id="name"
+                      type="text"
+                      placeholder="Name"
+                      value={this.state.name}
+                      onChange={this.handeNameChange}
+                  />
+                </div>
+                <hr/>
 
-                  <div className="form-group">
-                      <br/>
-                      <label htmlFor="about"><b>About Me:</b></label>
-                      <textarea
-                          className="form-control"
-                          rows="10"
-                          id="about"
-                          placeholder='About Me.... Minimum 20 characters'
-                          value={this.state.aboutMe !== "null" ? this.state.aboutMe: ''}
-                          onChange={this.handleAboutMeChange}
-                      />
-                  </div>
-                  <hr/>
+                <div className="form-group">
+                  <label htmlFor="skills"><b>What skills are required?</b></label>
+                  <p>Enter atleast 2 skills in which you are good at. Employer will
+                  accept your bids based on your skill set</p>
+                  <ChipInput
+                    id="skills"
+                    defaultValue={this.state.skills}
+                    dataSource={skill_data}
+                    onChange={(chips) => this.handleChange(chips)}
+                    floatingLabelText="Input your technologies"
+                    hintText="Type technologies"
+                    style={{ width: '100%' }}
+                  />
+                </div>
 
-                  <div className="form-group">
-                      <br/>
-                      <label htmlFor="contact"><b>Contact:</b></label>
-                      <input
-                          className="form-control"
-                          type="text"
-                          id="contact"
-                          placeholder="Contact"
-                          value={this.state.contact !== "null" ? this.state.contact: ''}
-                          onChange={this.handleContactChange}
-                      />
-                  </div>
-                  <hr/>
+                <div className="form-group">
+                  <br/>
+                  <label htmlFor="contact"><b>Contact:</b></label>
+                  <input
+                      className="form-control"
+                      type="text"
+                      id="contact"
+                      placeholder="Contact"
+                      value={this.state.contact !== "null" ? this.state.contact: ''}
+                      onChange={this.handleContactChange}
+                  />
+                </div>
+                <hr/>
 
-                  <div className="form-group">
-                      <br/>
-                      <label htmlFor="skills"><b>What skills are required?</b></label>
-                      <p>Enter up to 5 skills that best describe your project.
-                      Freelancers will use these skills to find projects they
-                      are most interested and experienced in.</p>
-                      <select
-                          multiple={true}
-                          id="skills"
-                          size="10"
-                          className="form-control"
-                          value={this.state.skills}
-                          onChange={this.handleOptionChange}>
-                              <option>Java</option>
-                              <option>Python</option>
-                              <option>Scala</option>
-                              <option>Go</option>
-                              <option>React</option>
-                              <option>Express</option>
-                              <option>Django</option>
-                              <option>Bootstrap</option>
-                              <option>Jquery</option>
-                              <option>MongoDB</option>
-                              <option>MySql</option>
-                              <option>C</option>
-                              <option>JavaScript</option>
-                              <option>HTML5</option>
-                      </select>
-                  </div>
-                  <hr/>
+                <div className="form-group">
+                    <br/>
+                    <label htmlFor="about"><b>About Me:</b></label>
+                    <textarea
+                        className="form-control"
+                        rows="10"
+                        id="about"
+                        placeholder='About Me.... Minimum 20 characters'
+                        value={this.state.aboutMe !== "null" ? this.state.aboutMe: ''}
+                        onChange={this.handleAboutMeChange}
+                    />
+                </div>
+                <hr/>
 
-                  <div className="form-group">
-                      <button
-                          className="btn btn-primary"
-                          type="submit">
-                          Save
-                      </button>
-                  </div>
-                  <hr/>
-                  <ToastContainer />
+                <div className="form-group">
+                    <button
+                        className="btn btn-primary"
+                        type="submit">
+                        Save
+                    </button>
+                </div>
+                <hr/>
+                <ToastContainer />
               </form>
               <br/>
             </div>

@@ -7,6 +7,7 @@ import ReactTooltip from 'react-tooltip';
 import EditIcon from 'material-ui-icons/Edit';
 import HomeIcon from 'material-ui-icons/Home';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {blue500, red500, green600} from 'material-ui/styles/colors';
 
 class Profile extends Component {
   constructor (props) {
@@ -99,45 +100,42 @@ class Profile extends Component {
       return (
         <MuiThemeProvider>
           <div className="container-fluid">
-            <div className="offset-md-2 col-md-6">
+            <div className="offset-md-5 col-md-12">
                 <img src="/fl-logo.svg" height="80" width="160" className="left-block" alt="logo"/>
             </div>
-            <div className="offset-md-2 col-md-6 ">
+            <div className="col-md-12 ">
               <Link to={`/home`} className="link">
                   <ReactTooltip />
-                  <HomeIcon style={{ fontSize: 60 }} data-tip="Home"/>
+                  <HomeIcon color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Home"/>
               </Link>
               <div className="panel panel-primary">
                 <div className="panel-body">
-                    <div className="float-right">
-                      <Link to={`/editprofile`} className="link">
-                        <ReactTooltip />
-                        <EditIcon style={{ fontSize: 30 }} data-tip="Edit Profile"/>
-                      </Link>
-                    </div>
-                    <br/>
+                  <div className="float-right">
+                    <Link to={`/editprofile`} className="link">
+                    <ReactTooltip />
+                      <EditIcon color={blue500} hoverColor={green600} style={{width:30, height:30}} data-tip="Edit Profile"/>
+                    </Link>
+                  </div>
 
-                    <h4><i>User Name:</i></h4>
-                    <p><i>{this.props.pick.userinfo.username}</i></p>
-                    <br/><hr/>
+                  <h4><i>User Name:</i></h4>
+                  <p><i>{this.props.pick.userinfo.username}</i></p>
+                  <hr/>
 
-                    <h4><i>Name:</i></h4>
-                    <p>{this.props.pick.userinfo.name!=="null" ? this.props.pick.userinfo.name: "NA"}</p>
-                    <br/><hr/>
+                  <h4><i>Name:</i></h4>
+                  <p>{this.props.pick.userinfo.name!=="null" ? this.props.pick.userinfo.name: "NA"}</p>
+                  <hr/>
 
-                    <h4><i>Contact:</i></h4>
-                    <p>{this.props.pick.userinfo.contact!=="null" ? this.props.pick.userinfo.contact: "NA"}</p>
-                    <br/><hr/>
+                  <h4><i>Contact:</i></h4>
+                  <p>{this.props.pick.userinfo.contact!=="null" ? this.props.pick.userinfo.contact: "NA"}</p>
+                  <hr/>
 
-                    <h4>About:</h4>
-                    <br/>
-                    <p>{this.props.pick.userinfo.aboutMe!=="null" ? this.props.pick.userinfo.aboutMe: "NA"}</p>
-                    <br/><br/><hr/>
+                  <h4>About:</h4>
+                  <p>{this.props.pick.userinfo.aboutMe!=="null" ? this.props.pick.userinfo.aboutMe: "NA"}</p>
+                  <br/><hr/>
 
-                    <h4>Skills:</h4>
-                    <br/>
-                    <p>{disp_skills}</p>
-                    <br/><br/><hr/>
+                  <h4>Skills:</h4>
+                  <p>{disp_skills}</p>
+                  <hr/>
                 </div>
               </div>
             </div>

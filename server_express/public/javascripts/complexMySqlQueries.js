@@ -24,8 +24,8 @@ exports.get_user_projects_query_string = (username) => {
                            "GROUP BY projects.projectId";
             }
 exports.get_user_bid_projects_query_string = (username) => {
-                     return "SELECT A.projectId, A.title, A.employer, A.averageBidAmount, projectbid.bidAmount," +
-                            "A.status FROM projectbid INNER JOIN (" +
+                     return "SELECT A.projectId, A.title, A.employer, A.averageBidAmount, A.budgetLow, A.budgetHigh," +
+                            "A.status, projectbid.bidAmount, projectbid.periodInDays FROM projectbid INNER JOIN (" +
                              "SELECT projects.projectId," +
                              "MAX(projects.title) as title," +
                              "MAX(projects.description) as description," +

@@ -95,7 +95,7 @@ router.post('/userbidprojects', function(req, res) {
 
 router.post('/projectandbids', function(req, res) {
   console.log("Attempting to fetch the project details along with its bids: " + req.body.projectId);
-  const mysql_select_query = "select u.username, p.projectId, p.title, p.description, "
+  const mysql_select_query = "select u.userId, u.name, u.username, u.contact, p.projectId, p.title, p.description, "
                               + "p.budgetLow, p.budgetHigh, p.skills, p.status From "
                               + USER_TABLE + " as u INNER JOIN " + PROJECT_TABLE
                               + " as p on u.userId = p.ownerUserId AND p.projectId = '"
@@ -127,7 +127,8 @@ router.post('/projectandbids', function(req, res) {
                     const select_inner_join_query = "select u.userId, u.name, u.username, u.contact, u.aboutMe, "
                                                     + "u.skills, pb.projectId, pb.bidAmount, pb.periodInDays From " +
                                                     USER_TABLE + " as u INNER JOIN " + PROJECT_BID_TABLE +
-                                                    " as pb on u.userId = pb.userId AND u.userId IN (" + ids.join(',') + ")";
+                                                    " as pb on u.userId = pb.userId AND pb.projectId=" + 
+                                                    req.body.projectId + " AND u.userId IN (" + ids.join(',') + ")";
                     mysqlconn.selectData(function(error, userResults) {
                       if (error) {
                             console.log("DB Error in: select_inner_join_query");
@@ -142,6 +143,23 @@ router.post('/projectandbids', function(req, res) {
         }
     }
   }, mysql_select_query)
+});
+
+router.post('/acceptproject', function(req, res) {
+  console.log("Attempting to accept project: " + req.body.projectId);
+  const mysql_insert_query = "Update projects Set status=1 Where projectId = " + req.body.projectId;
+  console.log("Executing MySQL Query: " + mysql_insert_query);
+  mysqlconn.insertData(function(error, results) {
+      if (error) {
+          console.log("DB Error: Accept Project !!!");
+          throw error;
+      } else {
+          console.log("Rows affected: " + results.affectedRows);
+          results.message = "Project status has been updated ... !!!"
+          console.log("Result message: " + results.message);
+          res.status(201).json(results);
+      }
+  }, mysql_insert_query);
 });
 
 module.exports = router;

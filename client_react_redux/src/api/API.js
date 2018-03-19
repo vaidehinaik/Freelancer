@@ -179,3 +179,19 @@ export const allProjects = () =>
           console.log("This is error in userbids");
           return error;
       });
+
+    export const acceptBid = (projectId) =>
+        fetch(`${api}/projects/acceptproject`, {
+          method: 'POST',
+          headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({projectId: projectId})
+          }).then(res => {
+            return res;
+          })
+          .catch(error => {
+            console.log("This is error in accept bid");
+            return error;
+        });

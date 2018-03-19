@@ -18,14 +18,6 @@ import {
   TableRowColumn
 } from 'material-ui/Table';
 
-const paperStyle = {
-  height: "100%",
-  width: "100%",
-  margin: 10,
-  textAlign: 'center',
-  display: 'inline-block',
-};
-
 
 class Home extends Component {
 
@@ -44,7 +36,7 @@ class Home extends Component {
         enableSelectAll: false,
         deselectOnClickaway: true,
         showCheckboxes: true,
-        height: '300px'
+        height: '600px'
       };
 
       this.handleChange = this.handleChange.bind(this);
@@ -111,9 +103,8 @@ class Home extends Component {
       return (
         <MuiThemeProvider>
           <div className="container">
-            <Paper style={paperStyle} zDepth={4}>
               <div className="row mx-auto">
-                <div className="col-sm-6 col-sm-offset-3">
+                <div className="col-sm-6">
                   <img src="/fl-logo.svg" height="120" width="160" className="left-block" alt="logo"/>
                 </div>
                 <div className="col-md-12 col-md-offset-2 mx-auto">
@@ -123,7 +114,6 @@ class Home extends Component {
               <div className="col-sm-12">
                   <Table
                       onRowSelection={this.navigateToProjectInfo}
-                      style={{height: "100%", width: "100%", tableLayout: "auto"}}
                       height={this.state.height}
                       fixedHeader={this.state.fixedHeader}
                       selectable={this.state.selectable}
@@ -156,7 +146,7 @@ class Home extends Component {
                           this.props.pick.allProjects.map((project, index) => (
                             <TableRow key={index}>
                               <TableRowColumn>{index+1}</TableRowColumn>
-                              <TableRowColumn>{project.title}</TableRowColumn>
+                              <TableRowColumn style={{whiteSpace: 'normal',wordWrap: 'break-word'}}>{project.title}</TableRowColumn>
                               <TableRowColumn>{project.employer}</TableRowColumn>
                               <TableRowColumn>{project.bidsCount}</TableRowColumn>
                               <TableRowColumn>{project.averageBidAmount}</TableRowColumn>
@@ -167,7 +157,6 @@ class Home extends Component {
                       </TableBody>
                   </Table>
               </div>
-            </Paper>
           </div>
         </MuiThemeProvider>
       );

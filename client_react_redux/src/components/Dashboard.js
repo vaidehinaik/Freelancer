@@ -18,15 +18,6 @@ import {
   TableRowColumn
 } from 'material-ui/Table';
 
-const paperStyle = {
-  height: "100%",
-  width: "100%",
-  margin: 20,
-  textAlign: 'center',
-  display: 'inline-block',
-};
-
-
 class Home extends Component {
 
   constructor (props) {
@@ -45,7 +36,7 @@ class Home extends Component {
         enableSelectAll: false,
         deselectOnClickaway: true,
         showCheckboxes: true,
-        height: '300px'
+        height: '400px'
       };
 
       this.handleChange = this.handleChange.bind(this);
@@ -153,7 +144,6 @@ class Home extends Component {
       return (
         <MuiThemeProvider>
           <div className="container">
-            <Paper style={paperStyle} zDepth={4}>
               <div className="row mx-auto">
                 <div className="col-sm-6 col-sm-offset-3">
                   <img src="/fl-logo.svg" height="120" width="160" className="left-block" alt="logo"/>
@@ -165,7 +155,6 @@ class Home extends Component {
               <div className="col-sm-12">
                   <Table
                     onRowSelection={this.navigateToPostedProject.bind(this)}
-                    style={{height: "100%", width: "100%", tableLayout: "auto"}}
                     height={this.state.height}
                     fixedHeader={this.state.fixedHeader}
                     selectable={this.state.selectable}
@@ -198,7 +187,7 @@ class Home extends Component {
                           this.props.pick.userProjects.map((project, index) => (
                             <TableRow key={index}>
                               <TableRowColumn>{index+1}</TableRowColumn>
-                              <TableRowColumn>{project.title}</TableRowColumn>
+                              <TableRowColumn style={{whiteSpace: 'normal',wordWrap: 'break-word'}}>{project.title}</TableRowColumn>
                               <TableRowColumn>{project.employer}</TableRowColumn>
                               <TableRowColumn>{project.bidsCount}</TableRowColumn>
                               <TableRowColumn>{project.averageBidAmount}</TableRowColumn>
@@ -209,13 +198,10 @@ class Home extends Component {
                       </TableBody>
                   </Table>
               </div>
-            </Paper>
-            <br/><br/>
-            <Paper style={paperStyle} zDepth={4}>
+
               <div className="col-sm-12">
                   <Table
                     onRowSelection={this.navigateToBidProject.bind(this)}
-                    style={{height: "100%", width: "100%", tableLayout: "auto"}}
                     height={this.state.height}
                     fixedHeader={this.state.fixedHeader}
                     selectable={this.state.selectable}
@@ -225,7 +211,7 @@ class Home extends Component {
                         adjustForCheckbox={this.state.showCheckboxes}
                         enableSelectAll={this.state.enableSelectAll}>
                           <TableRow>
-                            <TableHeaderColumn colSpan="7" tooltip="" style={{textAlign: 'left'}}>
+                            <TableHeaderColumn colSpan="8" tooltip="" style={{textAlign: 'left'}}>
                               <h3><b><i>{this.props.pick.username} Bids</i></b></h3>
                             </TableHeaderColumn>
                           </TableRow>
@@ -233,10 +219,11 @@ class Home extends Component {
                             <TableHeaderColumn tooltip="Project Number">#</TableHeaderColumn>
                             <TableHeaderColumn tooltip="The Project">Project</TableHeaderColumn>
                             <TableHeaderColumn tooltip="Project Owner">Employer</TableHeaderColumn>
-                            <TableHeaderColumn tooltip="Total Bids">Bids Count</TableHeaderColumn>
-                            <TableHeaderColumn tooltip="Average Bid Amount">Avg Bid ($)</TableHeaderColumn>
-                            <TableHeaderColumn tooltip="Low Budget ($)">Lower Budget ($)</TableHeaderColumn>
-                            <TableHeaderColumn tooltip="High Budget ($)">Higher Budget ($)</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Your Bid Amount">Bid Amount</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Your project completion estimation in days">Estimated Days</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Average Bid Amount of project">Avg Bid ($)</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Lower Budget of project">Lower Budget ($)</TableHeaderColumn>
+                            <TableHeaderColumn tooltip="Higher Budget of project">Higher Budget ($)</TableHeaderColumn>
                           </TableRow>
                       </TableHeader>
                       <TableBody
@@ -248,9 +235,10 @@ class Home extends Component {
                           this.props.pick.userBidProjects.map((project, index) => (
                             <TableRow key={index}>
                               <TableRowColumn>{index+1}</TableRowColumn>
-                              <TableRowColumn>{project.title}</TableRowColumn>
+                              <TableRowColumn style={{whiteSpace: 'normal',wordWrap: 'break-word'}}>{project.title}</TableRowColumn>
                               <TableRowColumn>{project.employer}</TableRowColumn>
-                              <TableRowColumn>{project.bidsCount}</TableRowColumn>
+                              <TableRowColumn>{project.bidAmount}</TableRowColumn>
+                              <TableRowColumn>{project.periodInDays}</TableRowColumn>
                               <TableRowColumn>{project.averageBidAmount}</TableRowColumn>
                               <TableRowColumn>{project.budgetLow}</TableRowColumn>
                               <TableRowColumn>{project.budgetHigh}</TableRowColumn>
@@ -259,7 +247,6 @@ class Home extends Component {
                       </TableBody>
                   </Table>
               </div>
-            </Paper>
           </div>
         </MuiThemeProvider>
       );
