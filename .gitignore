@@ -3,6 +3,8 @@
 # dependencies
 client_react_redux/node_modules/*
 server_express/node_modules/*
+kafka-backend-db/node_modules/*
+kafka-backend-express/node_modules/*
 
 # testing
 client_react_redux/coverage/*
