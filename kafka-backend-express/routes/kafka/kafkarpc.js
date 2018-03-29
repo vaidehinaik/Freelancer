@@ -21,6 +21,7 @@ KafkaRPC.prototype.makeRequest = function(topic_name, content, callback) {
   var correlationId = crypto.randomBytes(16).toString('hex');
 
   console.log("kafka rpc topic: " + topic_name);
+  console.log("kafka rpc correlationId: " + correlationId);
   // create a timeout for what should happen if we don't get a response
   var tId = setTimeout(function(corr_id) {
        // if this ever gets called we didn't get a response in a timely fashion
@@ -52,10 +53,10 @@ KafkaRPC.prototype.makeRequest = function(topic_name, content, callback) {
           partition: 0
         }];
 
-      console.log(self.producer.ready);
+      console.log("producer status: " + self.producer.ready);
       self.producer.send(payloads, function (err, data) {
           if (err) console.log(err);
-          console.log(data);
+          console.log("kafkarpc data: " + JSON.stringify(data));
       });
   });
 };

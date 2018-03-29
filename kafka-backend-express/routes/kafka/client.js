@@ -6,7 +6,7 @@ function make_request(topic_name, msg_payload, callback) {
 		if(err)
 			console.error(err);
 		else{
-			console.log("response", response);
+			console.log("response: " + JSON.stringify(response));
 			callback(null, response);
 		}
 	});

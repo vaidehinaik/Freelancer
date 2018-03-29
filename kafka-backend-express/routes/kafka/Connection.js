@@ -20,7 +20,7 @@ function ConnectionProvider() {
             let HighLevelProducer = kafka.HighLevelProducer;
             this.kafkaProducerConnection = new HighLevelProducer(this.client);
             //this.kafkaConnection = new kafka.Producer(this.client);
-            console.log('producer ready');
+            console.log('kafka express producer ready');
         }
         return this.kafkaProducerConnection;
     };
