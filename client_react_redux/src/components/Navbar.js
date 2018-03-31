@@ -11,7 +11,7 @@ import HomeIcon from 'material-ui-icons/Home';
 import DashboardIcon from 'material-ui-icons/Dashboard';
 import AccountCircleIcon from 'material-ui-icons/AccountCircle';
 import AddCircleIcon from 'material-ui-icons/AddCircle';
-import {blue500, red500, green600, lightBlue400} from 'material-ui/styles/colors';
+import {blue500, red500, green600} from 'material-ui/styles/colors';
 
 class Navbar extends Component {
 

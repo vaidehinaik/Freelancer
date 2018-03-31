@@ -7,13 +7,13 @@ let login = require('./db_services/login');
 let signup = require('./db_services/signup');
 
 let loginConsumer = connection.getConsumerObj(kafka_topics.LOGIN);
-// let signupConsumer = connection.getConsumerObj(kafka_topics.SIGNUP);
+let signupConsumer = connection.getConsumerObj(kafka_topics.SIGNUP);
 
 try {
   loginConsumer.on('message', function (message) {
       var data = JSON.parse(message.value);
 
-      console.log('*** message received ***');
+      console.log('*** login message received ***');
       console.log(data);
       console.log("Topic: " + data.replyTo);
 
@@ -37,32 +37,31 @@ try {
       });
     });
 
-    // signupConsumer.on('message', function (message) {
-    //   var data = JSON.parse(message.value);
-    //
-    //   console.log('*** message received ***');
-    //   console.log(JSON.stringify(message.value));
-    //   console.log(data.replyTo);
-    //
-    //   signup.handle_request(data.data, function (err, res) {
-    //     console.log('After Handle Response: ' + res);
-    //     let payloads = [
-    //         {
-    //             topic: data.replyTo,
-    //             messages: JSON.stringify({
-    //                 correlationId: data.correlationId,
-    //                 data: res
-    //             }),
-    //             partition: 0
-    //         }
-    //     ];
-    //     producer.send(payloads, function (err, data) {
-    //         console.log("Payload: " + payloads);
-    //         console.log("Data: " + data);
-    //         console.log("Error: " + err);
-    //     });
-    //   });
-    // });
+    signupConsumer.on('message', function (message) {
+        if (message.topic === kafka_topics.SIGNUP) {
+            var data = JSON.parse(message.value);
+            console.log('*** signup message received ***');
+            console.log(data);
+            console.log("Topic: " + data.replyTo);
+
+            signup.handle_request(data.data, function (err, res) {
+                console.log('after handle: ' + JSON.stringify(res));
+                var payloads = [
+                    {
+                        topic: data.replyTo,
+                        messages: JSON.stringify({
+                            correlationId: data.correlationId,
+                            data: res
+                        }),
+                        partition: 0
+                    }
+                ];
+                producer.send(payloads, function (err, data) {
+                    console.log(payloads);
+                });
+            });
+        }
+    });
 } catch (error) {
   console.log("Error: " + error);
 }

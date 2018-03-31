@@ -1,5 +1,7 @@
-let mongoose = require('mongoose');
-let Schema = mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var mongoURL = "mongodb://localhost:27017/freelancer";
+mongoose.connect(mongoURL);
 
 let usersSchema = new Schema({
     userId: {

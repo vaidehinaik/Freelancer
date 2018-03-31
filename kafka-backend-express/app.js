@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var assert = require('assert');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var cors = require('cors');
@@ -17,7 +18,7 @@ var app = express();
 // Need to provide mongo db
 var store = new MongoDBStore({
    uri: 'mongodb://localhost:27017/connect_mongodb_session',
-   databaseName: 'mongoExpress',
+   databaseName: 'express_sessions',
    collection: 'userSessions'
 });
 

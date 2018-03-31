@@ -11,7 +11,7 @@ module.exports = function(passport) {
         if(err) {
           done(err, {});
         } else {
-            if(results.status === 200) {
+            if(results.status === 201) {
                 console.log("Username: "+ username);
                 done(null, results);
             }

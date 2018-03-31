@@ -2,10 +2,8 @@ var express = require('express');
 var router = express.Router();
 const passport = require("passport");
 require('./passport')(passport);
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+let kafka = require('./kafka/client');
+let kafka_topics =  require('../configs/kafka_topics').kafka_topic_enums;
 
 router.post('/login', function (req, res) {
     console.log("request body: " + JSON.stringify(req.body));
@@ -13,18 +11,62 @@ router.post('/login', function (req, res) {
         console.log("my response: " + JSON.stringify(response));
         if (err) {
             console.log(err);
-            res.status(400).send();
+            res.status(400).json({"message": "Something went wrong"});
         }
-        if (response.status === 200) {
-            res.status(response.status).send(req.session.username);
+        if (response.status === 201) {
+            req.session.username = response.username;
+            console.log("session initilized: " + req.session.username);
+            res.status(response.status).json({"message": response.message, "token": req.session.username});
         }
         else if (response.status === 400) {
-            res.status(response.status).send({"message": response.message});
+            res.status(response.status).json({"message": response.message});
         }
         else {
-            res.status(401).send({"message": "Login Failed"});
+            res.status(response.status).json({"message": response.message});
         }
     })(req, res);
+});
+
+router.post('/signup', function(req, res, next){
+    try {
+        console.log("request body: " + JSON.stringify(req.body));
+        kafka.make_request(kafka_topics.SIGNUP , req.body, function(err,results){
+            console.log('Result: ' + results);
+            if(err){
+                console.log(err);
+                throw err;
+            }
+            else
+            {
+                if(results.status === 201){
+                    console.log("Result - username: " + results.username);
+                    console.log("Local username: "+ req.body.username);
+                    res.status(201).send({"message":"Signup Successful"});
+                }
+                else if(results.status === 200){
+                    res.status(200).send({"message":"User already Exist"});
+                }
+                else if(results.status === 401) {
+                    res.status(401).send({"message":"Signup Failed"});
+                }
+            }
+        });
+    }
+    catch (e){
+        console.log(e);
+        res.status(401).json({message: "Signup Failed"});
+    }
+});
+
+router.post('/logout',function(req, res) {
+    console.log("=====================================");
+    console.log("Express Session: " + JSON.stringify(req.session));
+    console.log("=====================================");
+    console.log("Session username: " + req.session.username);
+    req.session.destroy();
+    console.log('Session Destroyed');
+    console.log("Logged out successfully ... ");
+    res.status(201).json({message: "Logging out ... !!!"});
 });
 
 module.exports = router;

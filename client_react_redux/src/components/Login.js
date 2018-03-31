@@ -40,7 +40,8 @@ class Login extends Component {
 
     proceedToHome() {
       /*On Successful login*/
-      this.props.history.push("/home");
+      /*this.props.history.push("/home");*/
+      this.props.history.push("/signup");
     }
 
     displayErrMsg() {
@@ -56,6 +57,7 @@ class Login extends Component {
     }
 
     handleSubmit = (loginInfo) => {
+      console.log("logging in ");
       if(loginInfo.username === "" || loginInfo.password === "") {
           const message = "Enter username and password !!!"
           this.setState({
