@@ -3,12 +3,12 @@ var mongo = require('../mongo/mongo');
 var usersModel = require('../models/Users');
 var ObjectID = require('mongodb').ObjectID;
 var mongoURL = "mongodb://localhost:27017/freelancer";
-var objectId = new ObjectID();
 
 handle_request = ((data, callback) => {
     let err=null;
     let response = {};
     try {
+        var objectId = new ObjectID();
         console.log("Data received for mongo: "  + JSON.stringify(data));
         var salt = bcrypt.genSaltSync(10);
         var user = {

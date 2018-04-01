@@ -62,14 +62,43 @@ router.post('/userinfo', function(req, res, next) {
     try {
         console.log("request body: " + JSON.stringify(req.body));
         kafka.make_request(kafka_topics.USERINFO , req.body, function(err,results){
-            console.log('Result: ' + results);
+            console.log('Result: ' + JSON.stringify(results));
             if(err){
                 console.log(err);
                 throw err;
             }
             else
             {
-                if(results.status === 201){
+                if(results.status === 201) {
+                    if (results.skills !== "null") {
+                      results.skills = results.skills.join(',');
+                    }
+                    res.status(results.status).json(results);
+                } else {
+                    res.status(results.status).json({message:results.message});
+                }
+            }
+        });
+    }
+    catch (e){
+        console.log(e);
+        res.status(401).json({message: "something went wrong.. Try again"});
+    }
+});
+
+router.post('/updateuserinfo', function(req, res, next) {
+    console.log("Fetching info for user: " + req.body.username);
+    try {
+        console.log("request body: " + JSON.stringify(req.body));
+        kafka.make_request(kafka_topics.UPDATEUSERINFO , req.body, function(err, results){
+            console.log('Result: ' + JSON.stringify(results));
+            if(err){
+                console.log(err);
+                throw err;
+            }
+            else
+            {
+                if(results.status === 201) {
                     console.log("Result - username: " + results.username);
                     res.status(results.status).json(results);
                 } else {
