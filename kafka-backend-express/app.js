@@ -9,15 +9,17 @@ var passport = require('passport');
 var cors = require('cors');
 var session = require("express-session");
 var MongoDBStore = require('connect-mongodb-session')(session);
+var mongo_url = 'mongodb://localhost:27017/connect_mongodb_session'
 
 // Routes
 var users = require('./routes/users');
+var projects = require('./routes/projects');
 
 var app = express();
 
 // Need to provide mongo db
 var store = new MongoDBStore({
-   uri: 'mongodb://localhost:27017/connect_mongodb_session',
+   uri: mongo_url,
    databaseName: 'express_sessions',
    collection: 'userSessions'
 });

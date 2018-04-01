@@ -13,6 +13,7 @@
     "kafka-node": "^2.2.3",
     "mongodb": "^2.2.33",
     "mongoose": "^4.13.6",
+    "mongoose-findorcreate": "^3.0.0",
     "mysql": "^2.15.0"
   },
   "repository": {

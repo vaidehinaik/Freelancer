@@ -30,8 +30,8 @@ router.post('/login', function (req, res) {
 router.post('/signup', function(req, res, next){
     try {
         console.log("request body: " + JSON.stringify(req.body));
-        kafka.make_request(kafka_topics.SIGNUP , req.body, function(err,results){
-            console.log('Result: ' + results);
+        kafka.make_request(kafka_topics.SIGNUP , req.body, function(err, results) {
+            console.log('Result: ' + JSON.stringify(results));
             if(err){
                 console.log(err);
                 throw err;
@@ -40,19 +40,19 @@ router.post('/signup', function(req, res, next){
             {
                 if(results.status === 201){
                     console.log("Result - username: " + results.username);
-                    res.status(results.status).send({"message":"Signup Successful"});
+                    res.status(results.status).json({"message":results.message});
                 }
                 else if(results.status === 200){
-                    res.status(results.status).send({"message":"User already Exist"});
+                    res.status(results.status).json({"message":results.message});
                 }
                 else if(results.status === 401) {
-                    res.status(results.status).send({"message":"Signup Failed"});
+                    res.status(results.status).json({"message":results.message});
                 }
             }
         });
     }
-    catch (e){
-        console.log(e);
+    catch (e) {
+        console.log("Error in Catch: "  + e);
         res.status(401).json({message: "Signup Failed"});
     }
 });

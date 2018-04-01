@@ -1,4 +1,5 @@
 let mongoose = require('mongoose');
+
 let Schema = mongoose.Schema;
 
 let projectsSchema = new Schema({
@@ -6,7 +7,11 @@ let projectsSchema = new Schema({
       type: Schema.Types.ObjectId,
       required: true
     },
-    userId: {
+    ownerUserId: {
+      type: String,
+      required: true
+    },
+    employer: {
       type: String,
       required: true
     },

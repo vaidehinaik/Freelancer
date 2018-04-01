@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
+var findOrCreate = require('mongoose-findorcreate')
 var Schema = mongoose.Schema;
-var mongoURL = "mongodb://localhost:27017/freelancer";
-mongoose.connect(mongoURL);
 
 let usersSchema = new Schema({
     userId: {
@@ -12,7 +11,7 @@ let usersSchema = new Schema({
       type: String,
       required: true
     },
-    userName: {
+    username: {
       type: String,
       required: true
     },
@@ -21,10 +20,12 @@ let usersSchema = new Schema({
       required: true
     },
     contact: {
-      type: String
+      type: String,
+      default: "null"
     },
     aboutMe: {
-      type: String
+      type: String,
+      default: "null"
     },
     skills: [{
       type: String
@@ -36,6 +37,8 @@ let usersSchema = new Schema({
       type: String
     }]
 });
+
+usersSchema.plugin(findOrCreate);
 
 let Users = mongoose.model('users', usersSchema);
 
