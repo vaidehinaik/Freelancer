@@ -6,10 +6,12 @@ let producer = connection.getProducer();
 let login = require('./db_services/login');
 let signup = require('./db_services/signup');
 let userinfo = require('./db_services/userinfo');
+let postproject = require('./db_services/postproject');
 
 let loginConsumer = connection.getConsumerObj(kafka_topics.LOGIN);
 let signupConsumer = connection.getConsumerObj(kafka_topics.SIGNUP);
 let userinfoConsumer = connection.getConsumerObj(kafka_topics.USERINFO);
+let postprojectConsumer = connection.getConsumerObj(kafka_topics.POSTPROJECT);
 
 try {
   loginConsumer.on('message', function (message) {
@@ -73,6 +75,32 @@ try {
             console.log("Topic: " + data.replyTo);
 
             userinfo.handle_request(data.data, function (err, res) {
+                console.log('after handle: ' + JSON.stringify(res));
+                var payloads = [
+                    {
+                        topic: data.replyTo,
+                        messages: JSON.stringify({
+                            correlationId: data.correlationId,
+                            data: res
+                        }),
+                        partition: 0
+                    }
+                ];
+                producer.send(payloads, function (err, data) {
+                    console.log(payloads);
+                });
+            });
+        }
+    });
+
+    postprojectConsumer.on('message', function (message) {
+        if (message.topic === kafka_topics.POSTPROJECT) {
+            var data = JSON.parse(message.value);
+            console.log('*** post project message received ***');
+            console.log(data);
+            console.log("Topic: " + data.replyTo);
+
+            signup.handle_request(data.data, function (err, res) {
                 console.log('after handle: ' + JSON.stringify(res));
                 var payloads = [
                     {

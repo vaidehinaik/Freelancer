@@ -1,0 +1,68 @@
+//var bcrypt = require('bcrypt');
+var mongo = require('../mongo/mongo');
+var usersModel = require('../models/Users');
+var projectsModel = require('../models/Projects');
+var ObjectID = require('mongodb').ObjectID;
+var mongoURL = "mongodb://localhost:27017/freelancer";
+var objectId = new ObjectID();
+
+handle_request = ((data, callback) => {
+    let err=null;
+    let response = {};
+    try {
+        console.log("Data received for mongo: "  + JSON.stringify(data));
+        var postproject = {
+            _id  : objectId,
+            projectId: objectId.toHexString(),
+            title: data.title,
+            description: data.description,
+            budgetLow: data.budgetLow,
+            budgetHigh: data.budgetHigh,
+            skills: data.skills,
+            employer: data.username
+        };
+        console.log("Attempt to insert data: " + JSON.stringify(postproject));
+
+        mongo.connect(mongoURL, function () {
+            var userscollection = mongo.collection("users");
+            userscollection.findOne({username: data.username}, function (err, result) {
+                console.log("Result from mongo: " + JSON.stringify(result));
+                if (err) {
+                    console.log("error:" + err);
+                    throw err;
+                }
+                if (result) {
+                    console.log("User found: " + result.userId);
+                    postproject.userId = result.userId;
+                    postprojectscollection.insertOne(postproject, function (err, resultData) {
+                      console.log("result data: " + resultData);
+                        if (err) {
+                          console.log(err);
+                          throw err;
+                        }
+                        if (resultData.insertedCount===1) {
+                            console.log("project posted successfully");
+                            response.status = 201;
+                            response.message = "Post project successful";
+                            callback(err, response);
+                        }
+                }
+                  else {
+                        response.status = 401;
+                        response.message = "Unauthorized user";
+                        callback(err, response);
+                      }
+                  });
+                }
+            });
+        });
+    }
+    catch (error) {
+        console.log("Error in catch: " + error);
+        response.status = 401;
+        response.message = "Post project failed";
+        callback(error, response);
+    }
+});
+
+exports.handle_request = handle_request;
