@@ -16,7 +16,10 @@ handle_request = ((data, callback) => {
             userId: objectId.toHexString(),
             name : data.name,
             username: data.username,
-            password : bcrypt.hashSync(data.password, salt)
+            password : bcrypt.hashSync(data.password, salt),
+            contact: "null",
+            aboutMe: "null",
+            skills: "null",
         };
         console.log("Attempt to insert data: " + JSON.stringify(user));
 

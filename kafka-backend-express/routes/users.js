@@ -40,14 +40,13 @@ router.post('/signup', function(req, res, next){
             {
                 if(results.status === 201){
                     console.log("Result - username: " + results.username);
-                    console.log("Local username: "+ req.body.username);
-                    res.status(201).send({"message":"Signup Successful"});
+                    res.status(results.status).send({"message":"Signup Successful"});
                 }
                 else if(results.status === 200){
-                    res.status(200).send({"message":"User already Exist"});
+                    res.status(results.status).send({"message":"User already Exist"});
                 }
                 else if(results.status === 401) {
-                    res.status(401).send({"message":"Signup Failed"});
+                    res.status(results.status).send({"message":"Signup Failed"});
                 }
             }
         });
@@ -55,6 +54,33 @@ router.post('/signup', function(req, res, next){
     catch (e){
         console.log(e);
         res.status(401).json({message: "Signup Failed"});
+    }
+});
+
+router.post('/userinfo', function(req, res, next) {
+    console.log("Fetching info for user: " + req.body.username);
+    try {
+        console.log("request body: " + JSON.stringify(req.body));
+        kafka.make_request(kafka_topics.USERINFO , req.body, function(err,results){
+            console.log('Result: ' + results);
+            if(err){
+                console.log(err);
+                throw err;
+            }
+            else
+            {
+                if(results.status === 201){
+                    console.log("Result - username: " + results.username);
+                    res.status(results.status).json(results);
+                } else {
+                    res.status(results.status).send({message:results.message});
+                }
+            }
+        });
+    }
+    catch (e){
+        console.log(e);
+        res.status(401).json({message: "something went wrong.. Try again"});
     }
 });
 
