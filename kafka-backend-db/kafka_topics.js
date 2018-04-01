@@ -3,5 +3,6 @@ exports.kafka_topic_enums = {
     SIGNUP: 'signup_topic',
     LOGOUT: 'logout_topic',
     USERINFO: 'userinfo_topic',
-    UPDATEUSERINFO: 'updateuserinfo_topic'
+    UPDATEUSERINFO: 'updateuserinfo_topic',
+    POSTPROJECT: 'postproject_topic'
 };

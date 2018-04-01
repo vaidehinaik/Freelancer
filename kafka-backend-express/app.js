@@ -60,6 +60,7 @@ app.use(session({
 app.use(passport.initialize());
 
 app.use('/users', users);
+app.use('/projects', projects);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
