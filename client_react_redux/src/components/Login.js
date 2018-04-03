@@ -40,8 +40,7 @@ class Login extends Component {
 
     proceedToHome() {
       /*On Successful login*/
-      /*this.props.history.push("/home");*/
-      this.props.history.push("/signup");
+      this.props.history.push("/home");
     }
 
     displayErrMsg() {

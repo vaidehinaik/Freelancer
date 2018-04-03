@@ -9,7 +9,8 @@ let projectsSchema = new Schema({
     },
     ownerUserId: {
       type: String,
-      required: true
+      required: true,
+      ref: 'users'
     },
     employer: {
       type: String,
@@ -48,6 +49,7 @@ let projectsSchema = new Schema({
     projectBids: [{
         userId: {
             type: String,
+            ref: 'users'
         },
         bidAmount: {
             type: Number

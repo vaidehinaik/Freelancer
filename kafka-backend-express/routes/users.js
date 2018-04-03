@@ -6,6 +6,7 @@ let kafka = require('./kafka/client');
 let kafka_topics =  require('../configs/kafka_topics').kafka_topic_enums;
 
 router.post('/login', function (req, res) {
+    console.log("\n\n****************************************************\n\n");
     console.log("request body: " + JSON.stringify(req.body));
     passport.authenticate('login', function (err, response) {
         console.log("my response: " + JSON.stringify(response));
@@ -27,7 +28,8 @@ router.post('/login', function (req, res) {
     })(req, res);
 });
 
-router.post('/signup', function(req, res, next){
+router.post('/signup', function(req, res, next) {
+    console.log("\n\n****************************************************\n\n");
     try {
         console.log("request body: " + JSON.stringify(req.body));
         kafka.make_request(kafka_topics.SIGNUP , req.body, function(err, results) {
@@ -58,6 +60,7 @@ router.post('/signup', function(req, res, next){
 });
 
 router.post('/userinfo', function(req, res, next) {
+    console.log("\n\n****************************************************\n\n");
     console.log("Fetching info for user: " + req.body.username);
     try {
         console.log("request body: " + JSON.stringify(req.body));
@@ -87,6 +90,7 @@ router.post('/userinfo', function(req, res, next) {
 });
 
 router.post('/updateuserinfo', function(req, res, next) {
+    console.log("\n\n****************************************************\n\n");
     console.log("Fetching info for user: " + req.body.username);
     try {
         console.log("request body: " + JSON.stringify(req.body));
@@ -114,6 +118,7 @@ router.post('/updateuserinfo', function(req, res, next) {
 });
 
 router.post('/logout',function(req, res) {
+    console.log("\n\n****************************************************\n\n");
     console.log("=====================================");
     console.log("Express Session: " + JSON.stringify(req.session));
     console.log("=====================================");

@@ -31,10 +31,12 @@ let usersSchema = new Schema({
       type: String
     }],
     userProjects: [{
-      type: String
+      type: String,
+      ref: "projects"
     }],
     userBids: [{
-      type: String
+      type: String,
+      ref: "projects"
     }]
 });
 

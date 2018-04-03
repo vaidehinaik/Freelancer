@@ -14,6 +14,7 @@ var mongo_url = 'mongodb://localhost:27017/connect_mongodb_session'
 // Routes
 var users = require('./routes/users');
 var projects = require('./routes/projects');
+var projectBid = require('./routes/projectBid');
 
 var app = express();
 
@@ -47,7 +48,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-    secret: "This is a secret for fandango cmpe273 project",
+    secret: "This is a secret for Freelancer cmpe273 project",
     // Forces the session to be saved back to the session store,
     // even if the session was never modified during the request
     resave: true,
@@ -63,6 +64,7 @@ app.use(passport.initialize());
 
 app.use('/users', users);
 app.use('/projects', projects);
+app.use('/projectBid', projectBid);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

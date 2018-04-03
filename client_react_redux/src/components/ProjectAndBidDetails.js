@@ -53,7 +53,6 @@ class ProjectAndBids extends Component {
           if (status === 201) {
             localStorage.setItem('projectDetails', JSON.stringify(json.projectDetails));
             localStorage.setItem('userProfilesWithBids', JSON.stringify(json.userProfilesWithBids));
-
             this.props.usersInfoWithBids(json.userProfilesWithBids);
             this.props.projectInfo(json.projectDetails);
 
