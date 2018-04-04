@@ -37,15 +37,21 @@ handle_request = ((data, callback) => {
                 // Update the userId in projects document
                 project.ownerUserId = result.userId;
                 var projectObj = new projectsModel(project);
-                projectObj.save(err => {
+                projectObj.save((err, project) => {
                     if (err) {
                         console.log(err);
                         throw err;
                     }
-                    console.log("project posted successfully");
-                    response.status = 201;
-                    response.message = "Project posted successfully";
-                    callback(err, response);
+                    usersModel.findOneAndUpdate({username: data.username},
+                      {$addToSet: { userProjects: project.projectId }},
+                      { new: true },
+                      function (err, updatedData) {
+                        if (err) return handleError(err);
+                        console.log("project posted successfully");
+                        response.status = 201;
+                        response.message = "Project posted successfully";
+                        callback(err, response);
+                    });
                 });
             } else {
                 response.status = 401;

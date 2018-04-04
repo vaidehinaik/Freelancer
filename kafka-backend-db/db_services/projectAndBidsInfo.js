@@ -7,11 +7,11 @@ mongoose.connect(mongoURL);
 
 handle_request = ((data, callback) => {
     let res = {};
-    var resp_load = {projectDetails: {}, userProfilesWithBids: []};
     try {
         console.log("project and bids info");
         projectsModel.findOne({projectId: data.projectId})
         .populate('ownerUserId')
+        .populate('projectBids.userId')
         .exec(function (err, result) {
           if(err) {
             console.log("ERROR: " + err);

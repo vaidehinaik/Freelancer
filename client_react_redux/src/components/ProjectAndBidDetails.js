@@ -301,6 +301,16 @@ class Bid extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    this.state.bidAmount = parseInt(this.state.bidAmount);
+    this.props.bidrange.low = parseInt(this.props.bidrange.low);
+    this.props.bidrange.high = parseInt(this.props.bidrange.high);
+    console.log("lower: " + typeof this.props.bidrange.low);
+    console.log("higher: " + typeof this.props.bidrange.high);
+    console.log("bidAMount: " + typeof this.state.bidAmount);
+    console.log("lower: " + this.props.bidrange.low);
+    console.log("higher: " + this.props.bidrange.high);
+    console.log("bidAMount: " + this.state.bidAmount);
+
     if (isNaN(this.state.bidAmount) || isNaN(this.state.periodInDays)) {
       this.notify("Input cannot be non numeric");
     } else if (this.state.bidAmount <= 0 || this.state.periodInDays <= 0) {

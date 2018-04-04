@@ -19,7 +19,7 @@ router.post('/login', function (req, res) {
             console.log("session initilized: " + req.session.username);
             res.status(response.status).json({"message": response.message, "token": req.session.username});
         }
-        else if (response.status === 400) {
+        else if (response.status === 401) {
             res.status(response.status).json({"message": response.message});
         }
         else {

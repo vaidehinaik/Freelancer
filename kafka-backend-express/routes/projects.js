@@ -31,7 +31,7 @@ router.get('/allprojects', function(req, res, next) {
     try {
         console.log("calling all projects");
         kafka.make_request(kafka_topics.ALLPROJECTS , {}, function(err, results) {
-            console.log('Results: ' + JSON.stringify(results));
+            console.log('\n\n***Results***:\n\n ' + JSON.stringify(results));
             if(err) {
                 console.log(err);
                 throw err;
@@ -67,7 +67,11 @@ router.post('/projectandbids', function(req, res) {
                 results.projects.skills = results.projects.skills.join(",");
                 resp_load.projectDetails = results.projects;
                 resp_load.userProfilesWithBids = results.projects.projectBids;
-                console.log("Final project details: " + JSON.stringify(resp_load));
+                resp_load.userProfilesWithBids.map(function (bid, index) {
+                    bid.name = bid.userId.name;
+                    bid.contact = bid.userId.contact
+                });
+                console.log("\n\n*** Final project details: ***\n\n " + JSON.stringify(resp_load));
                 res.status(results.status).json(resp_load);
             } else {
                 res.status(results.status).json({message: results.message});

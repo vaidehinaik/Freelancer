@@ -6,6 +6,7 @@ mongoose.connect(mongoURL);
 
 handle_request = ((callback) => {
     let res = {};
+    let final_result = [];
     try {
         console.log("Get all projects");
         projectsModel.find((err, results) => {
@@ -14,23 +15,23 @@ handle_request = ((callback) => {
               throw err;
             }
             if(results) {
-              console.log("all projects: " + JSON.stringify(results));
-              results.map(function (project) {
-                  bid_info = calculate_avg_bid_total_bids(project.projectBids);
-                  console.log("bid info: " + JSON.stringify(bid_info));
-                  project.averageBidAmount = bid_info[0];
-                  project.bidsCount = bid_info[1];
-              })
-              console.log("results after: " + JSON.stringify(results));
-              res.status = 201;
-              res.projects = results;
-              res.message = "Returning all projects";
-              callback(err, res);
+                results.map(function (project) {
+                    var prj_data = JSON.parse(JSON.stringify(project))
+                    bid_info = calculate_avg_bid_total_bids(project.projectBids);
+                    prj_data.averageBidAmount = bid_info[0];
+                    prj_data.bidsCount = bid_info[1];
+                    final_result.push(prj_data);
+                });
             } else {
               res.status = 401;
               res.message = "Unauthorized user";
               callback(err, res);
             }
+            console.log("\n\n*** All projects: ***\n\n " + JSON.stringify(final_result));
+            res.status = 201;
+            res.projects = final_result;
+            res.message = "Returning all projects";
+            callback(err, res);
         });
     }
     catch (error) {
