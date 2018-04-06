@@ -8,5 +8,7 @@ exports.kafka_topic_enums = {
     ALLPROJECTS: 'allprojects_topic',
     PROJECTINFO: 'projectinfo_topic',
     PROJECTANDBIDINFO: 'projectandbidinfo_topic',
-    UPDATEUSERBID: 'updateuserbid_topic'
+    UPDATEUSERBID: 'updateuserbid_topic',
+    USERBIDPROJECTS: 'userbidprojects_topic',
+    USERPROJECTS: 'userprojects_topic'
 };

@@ -6,34 +6,34 @@ let kafka = require('./kafka/client');
 let kafka_topics =  require('../configs/kafka_topics').kafka_topic_enums;
 
 router.post('/login', function (req, res) {
-    console.log("\n\n****************************************************\n\n");
+    console.log("\n****************************************************\n");
     console.log("request body: " + JSON.stringify(req.body));
     passport.authenticate('login', function (err, response) {
-        console.log("my response: " + JSON.stringify(response));
+        console.log("*** Result *** " + JSON.stringify(response));
         if (err) {
             console.log(err);
-            res.status(400).json({"message": "Something went wrong"});
+            res.status(400).json({message: "Something went wrong"});
         }
         if (response.status === 201) {
             req.session.username = response.username;
             console.log("session initilized: " + req.session.username);
-            res.status(response.status).json({"message": response.message, "token": req.session.username});
+            res.status(response.status).json({message: response.message, token: req.session.username});
         }
         else if (response.status === 401) {
-            res.status(response.status).json({"message": response.message});
+            res.status(response.status).json({message: response.message});
         }
         else {
-            res.status(response.status).json({"message": response.message});
+            res.status(response.status).json({message: response.message});
         }
     })(req, res);
 });
 
 router.post('/signup', function(req, res, next) {
-    console.log("\n\n****************************************************\n\n");
+    console.log("\n****************************************************\n");
     try {
         console.log("request body: " + JSON.stringify(req.body));
         kafka.make_request(kafka_topics.SIGNUP , req.body, function(err, results) {
-            console.log('Result: ' + JSON.stringify(results));
+            console.log('*** Result *** ' + JSON.stringify(results));
             if(err){
                 console.log(err);
                 throw err;
@@ -60,7 +60,7 @@ router.post('/signup', function(req, res, next) {
 });
 
 router.post('/userinfo', function(req, res, next) {
-    console.log("\n\n****************************************************\n\n");
+    console.log("\n****************************************************\n");
     console.log("Fetching info for user: " + req.body.username);
     try {
         console.log("request body: " + JSON.stringify(req.body));

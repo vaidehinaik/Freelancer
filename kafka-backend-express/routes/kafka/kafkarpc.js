@@ -19,9 +19,10 @@ KafkaRPC.prototype.makeRequest = function(topic_name, content, callback) {
   self = this;
   // generate a unique correlation id for this call
   var correlationId = crypto.randomBytes(16).toString('hex');
-
-  console.log("kafka rpc topic: " + topic_name);
-  console.log("kafka rpc correlationId: " + correlationId);
+  console.log("\n============================================");
+  console.log("kafka rpc topic :::-> " + topic_name);
+  console.log("kafka rpc correlationId :::-> " + correlationId);
+  console.log("============================================\n");
   // create a timeout for what should happen if we don't get a response
   var tId = setTimeout(function(corr_id) {
        // if this ever gets called we didn't get a response in a timely fashion
@@ -53,10 +54,10 @@ KafkaRPC.prototype.makeRequest = function(topic_name, content, callback) {
           partition: 0
         }];
 
-      console.log("producer status: " + self.producer.ready);
+      // console.log("producer status: " + self.producer.ready);
       self.producer.send(payloads, function (err, data) {
-          if (err) console.log(err);
-          console.log("kafkarpc data: " + JSON.stringify(data));
+          if (err) console.log("Error: " + err);
+          // console.log("kafkarpc data: " + JSON.stringify(data));
       });
   });
 };
@@ -71,10 +72,9 @@ KafkaRPC.prototype.setupResponseQueue = function (producer, topic_name, next) {
   var consumer = self.connection.getConsumer('response_topic');
 
   consumer.on('message', function (message) {
-      console.log('message received');
-      console.log("KafkaRPC: Data received from backend");
+      console.log("::: KafkaRPC ::: Data received from backend");
       var data = JSON.parse(message.value);
-      console.log(message.value);
+      // console.log(message.value);
       //get the correlationId
       var correlationId = data.correlationId;
       //is it a response to a pending request

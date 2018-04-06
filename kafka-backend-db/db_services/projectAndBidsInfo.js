@@ -10,8 +10,8 @@ handle_request = ((data, callback) => {
     try {
         console.log("project and bids info");
         projectsModel.findOne({projectId: data.projectId})
-        .populate('ownerUserId')
-        .populate('projectBids.userId')
+        .populate('ownerUserId', {_id: 0, password: 0, userBids: 0, userProjects: 0})
+        .populate('projectBids.userId', {__v: 0, _id: 0, password: 0, userBids: 0, userProjects: 0})
         .exec(function (err, result) {
           if(err) {
             console.log("ERROR: " + err);

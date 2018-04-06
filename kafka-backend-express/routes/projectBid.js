@@ -5,7 +5,7 @@ var kafka_topics =  require('../configs/kafka_topics').kafka_topic_enums;
 
 
 router.post('/userbid', function(req, res) {
-  console.log("\n\n****************************************************\n\n");
+  console.log("\n****************************************************\n");
   try {
       console.log("Attempting to add/udpate user bid in project bid table: " + JSON.stringify(req.body));
       kafka.make_request(kafka_topics.UPDATEUSERBID , req.body, function(err, results) {

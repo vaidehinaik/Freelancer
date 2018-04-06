@@ -1,21 +1,23 @@
-var projectsModel = require('../models/Projects');
+var usersModel = require('../models/Users');
 var mongoURL =  require('../mongo/mongo_url').url;
 
 var mongoose = require('mongoose');
 mongoose.connect(mongoURL);
 
-handle_request = ((callback) => {
+handle_request = ((data, callback) => {
     let res = {};
     let final_result = [];
     try {
-        console.log("Get all projects");
-        projectsModel.find((err, results) => {
+        console.log("Get user projects: " + data.username);
+        usersModel.findOne({username: data.username})
+        .populate('userProjects')
+        .exec((err, result) => {
             if (err) {
               console.log("Error: " + err);
               throw err;
             }
-            if(results) {
-                results.map(function (project) {
+            if(result) {
+                result.userProjects.map(function (project) {
                     var prj_data = JSON.parse(JSON.stringify(project))
                     bid_info = calculate_avg_bid_total_bids(project.projectBids);
                     prj_data.averageBidAmount = bid_info[0];
@@ -27,16 +29,16 @@ handle_request = ((callback) => {
               res.message = "Data not found";
               callback(err, res);
             }
-            console.log("\n*** All projects: ***\n " + JSON.stringify(final_result));
+            console.log("\n*** User projects: ***\n " + JSON.stringify(final_result));
             res.status = 201;
             res.projects = final_result;
-            res.message = "Returning all projects";
+            res.message = "Returning user projects";
             callback(err, res);
         });
     }
     catch (error) {
         res.status = 401;
-        res.message = "Failed to fetch all projects";
+        res.message = "Failed to fetch user projects";
         callback(error, res);
     }
 });
