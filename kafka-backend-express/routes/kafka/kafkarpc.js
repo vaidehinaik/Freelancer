@@ -54,10 +54,10 @@ KafkaRPC.prototype.makeRequest = function(topic_name, content, callback) {
           partition: 0
         }];
 
-      // console.log("producer status: " + self.producer.ready);
+      console.log("producer status: " + self.producer.ready);
       self.producer.send(payloads, function (err, data) {
           if (err) console.log("Error: " + err);
-          // console.log("kafkarpc data: " + JSON.stringify(data));
+          console.log("kafkarpc data: " + JSON.stringify(data));
       });
   });
 };
@@ -70,7 +70,6 @@ KafkaRPC.prototype.setupResponseQueue = function (producer, topic_name, next) {
 
   //subscribe to messages
   var consumer = self.connection.getConsumer('response_topic');
-
   consumer.on('message', function (message) {
       console.log("::: KafkaRPC ::: Data received from backend");
       var data = JSON.parse(message.value);

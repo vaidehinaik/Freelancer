@@ -10,6 +10,7 @@ import ReactTooltip from 'react-tooltip';
 import HomeIcon from 'material-ui-icons/Home';
 import DashboardIcon from 'material-ui-icons/Dashboard';
 import AccountCircleIcon from 'material-ui-icons/AccountCircle';
+import AccountBalanceWallet from 'material-ui-icons/AccountBalanceWallet';
 import AddCircleIcon from 'material-ui-icons/AddCircle';
 import {blue500, red500, green600} from 'material-ui/styles/colors';
 
@@ -134,6 +135,12 @@ class Navbar extends Component {
                 <ReactTooltip />
                 <Link to={`/postproject`} className="nav-link">
                   <AddCircleIcon color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Post Project"/>
+                </Link>
+              </li>
+              <li className="nav-item active">
+                <ReactTooltip />
+                <Link to={`/transactions`} className="nav-link">
+                  <AccountBalanceWallet color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Transactions"/>
                 </Link>
               </li>
             </ul>

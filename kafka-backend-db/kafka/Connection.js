@@ -4,18 +4,20 @@ function ConnectionProvider(topic_name) {
 
     this.getConsumerObj = function(topic_name) {
         this.client = new kafka.Client("localhost:2181");
+
         this.kafkaConsumerConnection = new kafka.Consumer(
-            this.client,
-            [{topic: topic_name, partition: 0}]);
+                                          this.client,
+                                          [{topic: topic_name, partition: 0}]
+                                      );
+
         this.client.on('ready', function () {
-          console.log('client ready!')
+          console.log('client ready with topic: ' + topic_name);
         });
         return this.kafkaConsumerConnection;
     };
 
     //Code will be executed when we start Producer
     this.getProducer = function() {
-
         if (!this.kafkaProducerConnection) {
             this.client = new kafka.Client("localhost:2181");
             var HighLevelProducer = kafka.HighLevelProducer;

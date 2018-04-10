@@ -37,7 +37,10 @@ let usersSchema = new Schema({
     userBids: [{
       type: String,
       ref: "projects"
-    }]
+    }],
+    totalFunds: {
+      type: Number
+    }
 });
 
 usersSchema.plugin(findOrCreate);

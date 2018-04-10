@@ -8,7 +8,9 @@ const initialState = {
     userProjects: [],
     userBidProjects: [],
     projectDetails: {},
-    userProfilesWithBids: []
+    userProfilesWithBids: [],
+    total_funds: '',
+    transactions: []
 }
 
 const reducers = (state = initialState, action) => {
@@ -70,6 +72,20 @@ const reducers = (state = initialState, action) => {
         };
     break;
 
+    case "TRANSACTIONS":
+        state={
+          ...state,
+          transactions: action.payload.transactions
+        };
+    break;
+
+    case "TOTAL_FUNDS":
+        state={
+          ...state,
+          total_funds: action.payload.total_funds
+        };
+    break;
+
     case "REHYDRATE":
         state={
           ...state,
@@ -82,10 +98,12 @@ const reducers = (state = initialState, action) => {
             token: '',
             username: '',
             projectId: '',
+            total_funds: '',
             skills: [],
             userinfo: {},
             allProjects: [],
             userProjects: [],
+            transactions: [],
             userBidProjects: [],
             projectDetails: {},
             userProfilesWithBids: []

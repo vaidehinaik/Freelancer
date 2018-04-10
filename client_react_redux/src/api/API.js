@@ -195,3 +195,19 @@ export const acceptBid = (projectId) =>
       console.log("This is error in accept bid");
       return error;
   });
+
+  export const doTransaction = (transactions) =>
+    fetch(`${api}/users/transactions`, {
+      method: 'POST',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({transactions})
+      }).then(res => {
+        return res;
+      })
+      .catch(error => {
+        console.log("This is error in do transactions");
+        return error;
+    });

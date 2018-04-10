@@ -5,47 +5,39 @@ import cookie from 'react-cookies';
 import Octicon from 'react-octicon';
 import * as API from '../api/API';
 import {connect} from 'react-redux';
+import Navbar from './Navbar';
 
 class TransactionManager extends Component {
 
     constructor (props) {
           super(props)
           this.state = {
-            username: '',
-            password: '',
+            total_funds: '',
+            transactions: '',
+            input_fund: '',
             message: ''
           };
-          this.handleUsernameInput = this.handleUsernameInput.bind(this);
-          this.handlePasswordInput = this.handlePasswordInput.bind(this);
+          this.handleInputFunds = this.handleInputFunds.bind(this);
     }
 
     componentWillMount() {
-      if(cookie.load('token')) {
-          this.props.history.push('/home');
+      if(cookie.load('token') === undefined) {
+        /*Redirect to login page if cookie not found*/
+        this.props.history.push('/');
       }
     }
 
     componentDidMount() {
-      document.getElementById("loginErr").style.visibility = "hidden";
+      document.getElementById("inputErr").style.visibility = "hidden";
     }
 
-    handleUsernameInput = (event) => {
-      var lc_username = event.target.value.toLowerCase();
-      this.setState({username: lc_username});
-    }
-
-    handlePasswordInput = (event) => {
-      this.setState({password: event.target.value});
-    }
-
-    proceedToHome() {
-      /*On Successful login*/
-      this.props.history.push("/home");
+    handleInputFunds = (event) => {
+      this.setState({input_fund: event.target.value});
     }
 
     displayErrMsg() {
-      document.getElementById("loginErr").style.visibility = "visible";
-      document.getElementById('loginErr').style.display="inline-block";
+      document.getElementById("inputErr").style.visibility = "visible";
+      document.getElementById('inputErr').style.display="inline-block";
     }
 
     notify = (message) => {
@@ -55,10 +47,11 @@ class TransactionManager extends Component {
       });
     }
 
-    handleSubmit = (loginInfo) => {
-      console.log("logging in ");
-      if(loginInfo.username === "" || loginInfo.password === "") {
-          const message = "Enter username and password !!!"
+    handleSubmit = (input_fund, fund_type) => {
+      console.log("sending funds: " + input_fund);
+      console.log("fund type: " + fund_type);
+      if(input_fund === 0) {
+          const message = "Input fund cannot be 0"
           this.setState({
               message: message
           });
@@ -66,7 +59,7 @@ class TransactionManager extends Component {
           this.notify(message);
       } else {
           var status;
-          API.doLogin(loginInfo)
+          API.doTransaction({amount: input_fund, type: fund_type})
               .then((res) => {
                   status = res.status;
                   try{
@@ -77,28 +70,25 @@ class TransactionManager extends Component {
                   }
               }).then((json) => {
                   if (status === 201) {
-                      this.props.updateUsername({username: this.state.username,
-                                                 token: json.token});
-                      cookie.save('token', json.token, { path: '/' });
+                      this.props.udpateTotalFunds({total_funds: json.total_funds});
                       this.setState({
                           message: json.message
                       });
-                      localStorage.setItem('username', this.state.username);
-                      this.proceedToHome();
+                      localStorage.setItem('total_funds', json.total_funds);
                   } else if (status === 401) {
-                      const message = "Incorrect username or password. Try again !!!"
+                      const message = "Something went wrong. Try again !!!"
                       this.setState({
-                          message: message
+                          message: json.message
                       });
                       this.displayErrMsg();
-                      this.notify(message);
+                      this.notify(json.message);
                   } else {
                       const message = "Server error... Try again later !!!"
                       this.setState({
-                          message: message
+                          message: json.message
                       });
                       this.displayErrMsg();
-                      this.notify(message);
+                      this.notify(json.message);
                   }
               });
         }
@@ -111,53 +101,44 @@ class TransactionManager extends Component {
                     <img src="/fl-logo.svg" height="150" width="300" className="left-block" alt="logo"/>
                 </div>
                 <br></br><br></br>
-                <div className="row justify-content-md-center">
+                <div className="row">
+                  <div className="col-md-12 col-md-offset-2 mx-auto">
+                    <Navbar />
+                  </div>
                   <div className="panel panel-primary">
                     <div className="panel-body">
                       <form>
                           <div className="form-group">
-                              <h3><i>Welcome to CMPE-273 Freelancer App</i></h3>
+                              <h3><i>{this.props.pick.username} Transactions</i></h3>
                               <br></br>
                           </div>
                           <div className="form-group">
                               <input
                                   className="form-control"
                                   type="text"
-                                  label="Username"
-                                  placeholder="Username"
-                                  required="required"
-                                  value={this.state.username}
-                                  onChange={this.handleUsernameInput}
-                              />
-                          </div>
-
-                          <div className="form-group">
-                              <input
-                                  className="form-control"
-                                  type="password"
-                                  label="password"
-                                  placeholder="Password"
-                                  required="required"
-                                  value={this.state.password}
-                                  onChange={this.handlePasswordInput}
+                                  label="amount"
+                                  placeholder="Input Amount"
+                                  value={this.state.input_fund}
+                                  onChange={this.handleInputFunds}
                               />
                           </div>
                           <div className="form-group">
                               <button
-                                  className="btn btn-primary"
+                                  className="btn btn-success"
                                   type="button"
-                                  onClick={() => this.handleSubmit(this.state)}>
-                                      Login
+                                  onClick={() => this.handleSubmit(this.state, "add")}>
+                                      Add Money
+                              </button>
+                              <button
+                                  className="btn btn-danger"
+                                  type="button"
+                                  onClick={() => this.handleSubmit(this.state, "withdraw")}>
+                                      Withdraw
                               </button>
                               <hr></hr>
-                              <p>New User?
-                                  <Link to={`/signup`} className="link">
-                                      Register Here
-                                  </Link>
-                              </p>
                           </div>
                           <div className="form-group">
-                              <div id="loginErr" className="alert alert-danger">
+                              <div id="inputErr" className="alert alert-danger">
                                   <Octicon name="alert"/>
                               </div>
                               <ToastContainer />
@@ -172,20 +153,20 @@ class TransactionManager extends Component {
   }
 
   const mapStateToProps = (state) => {
-      return{
+      return {
           pick: state.reducers
       };
   };
 
   const mapDispatchToProps = (dispatch) => {
       return{
-          updateUsername: (payload) => {
+          udpateTotalFunds: (payload) => {
               dispatch({
-                  type: "USERNAME",
-                  payload : {username:payload.username, token: payload.token}
+                  type: "TOTAL_FUNDS",
+                  payload: {total_funds: payload.total_funds}
               });
           },
       };
   };
 
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Login));
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(TransactionManager));
