@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import Octicon from 'react-octicon';
 import * as API from '../api/API';
-import Navbar from './Navbar';
 
 class Signup extends Component {
   constructor (props) {
@@ -54,7 +53,7 @@ class Signup extends Component {
         API.doSignup(signupInfo)
             .then((res) => {
                 status = res.status;
-                return res.json();
+                return res.json;
             }).then((json) => {
                 if (status === 201) {
                     this.setState({
@@ -88,7 +87,6 @@ class Signup extends Component {
             <br></br><br></br><br></br><br></br><br></br>
             <div className="row justify-content-md-center">
                 <div className="col-md-12 col-md-offset-2 mx-auto">
-                  <Navbar />
                 </div>
                 <div className="col-md-6 col-sm-12 col-lg-6">
                     <div className="panel panel-primary">
