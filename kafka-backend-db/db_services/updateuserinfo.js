@@ -13,8 +13,8 @@ handle_request = ((data, callback) => {
                 aboutMe: data.aboutMe,
                 skills: data.skills
             }};
-            var userscollection = mongo.collection("users");
             mongo.connect(mongoURL, function () {
+            var userscollection = mongo.collection("users");
                 userscollection.findOneAndUpdate({username:data.username}, updateQuery, {new: true}, function (err, results) {
                     console.log(results);
                     if (err) {

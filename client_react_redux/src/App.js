@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import PostProject from './components/PostProject';
 import EditProfile from './components/EditProfile';
 import ProjectAndBids from './components/ProjectAndBidDetails';
+import TransactionManager from './componenets/TransactionManager';
 
 class App extends Component {
 
@@ -24,6 +25,7 @@ class App extends Component {
                   <Route exact path="/editprofile" component={EditProfile}/>
                   <Route exact path="/projectinfo" component={ProjectAndBids}/>
                   <Route exact path="/dashboard" component={Dashboard}/>
+                  <Route exact path="/transactionmanager" component={Dashboard}/>
               </div>
           </BrowserRouter>
       </div>
