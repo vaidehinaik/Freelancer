@@ -39,20 +39,23 @@ let usersSchema = new Schema({
       ref: "projects"
     }],
     totalFunds: {
-      type: Number
-    }
+      type: Number,
+      default: 0
+    },
     transactions: [{
-       amount_type: String
-     },
       userId: {
           type: String,
           ref: 'users'
       },
       amount: {
-        type: Number
+          type: Number
       },
-      date_time: {
-        type: Date
+      amountType: {
+          type: String
+      },
+      transactionEntryTime: {
+          type: Date,
+          default: Date.now
       }
     }]
 });

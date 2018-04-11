@@ -129,34 +129,29 @@ router.post('/logout',function(req, res) {
     res.status(201).json({message: "Logging out ... !!!"});
 });
 
-router.post('/transactions', function(req, res, next) {
+router.post('/transaction', function(req, res, next) {
     console.log("\n****************************************************\n");
     try {
         console.log("request body: " + JSON.stringify(req.body));
-        kafka.make_request(kafka_topics.TRANSACTIONMANAGER , req.body, function(err, results) {
-            console.log('*** Result *** ' + JSON.stringify(results));
-            if(err){
+        kafka.make_request(kafka_topics.TRANSACTIONMANAGER , req.body, function(err, result) {
+            console.log('*** Result *** ' + JSON.stringify(result));
+            if(err) {
                 console.log(err);
                 throw err;
             }
-            else
-            {
-                if(results.status === 201){
-                    console.log("Result - username: " + results.username);
-                    res.status(results.status).json({"message":results.message});
+            else {
+                if(result.status === 201) {
+                    res.status(result.status).json({"message":result.message});
                 }
-                else if(results.status === 200){
-                    res.status(results.status).json({"message":results.message});
-                }
-                else if(results.status === 401) {
-                    res.status(results.status).json({"message":results.message});
+                else if(result.status === 401) {
+                    res.status(result.status).json({"message":result.message});
                 }
             }
         });
     }
     catch (e) {
         console.log("Error in Catch: "  + e);
-        res.status(401).json({message: "Signup Failed"});
+        res.status(401).json({message: "Transaction failed"});
     }
 });
 

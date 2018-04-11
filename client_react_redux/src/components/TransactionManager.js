@@ -12,6 +12,7 @@ class TransactionManager extends Component {
     constructor (props) {
           super(props)
           this.state = {
+            username: localStorage.getItem("username"),
             total_funds: '',
             transactions: '',
             input_fund: '',
@@ -59,7 +60,10 @@ class TransactionManager extends Component {
           this.notify(message);
       } else {
           var status;
-          API.doTransaction({amount: input_fund, type: fund_type})
+          var payload = {username: this.props.pick.username,
+                         amount: input_fund,
+                         amountType: fund_type};
+          API.doTransaction(payload)
               .then((res) => {
                   status = res.status;
                   try{
@@ -75,6 +79,7 @@ class TransactionManager extends Component {
                           message: json.message
                       });
                       localStorage.setItem('total_funds', json.total_funds);
+                      this.notify(json.message);
                   } else if (status === 401) {
                       const message = "Something went wrong. Try again !!!"
                       this.setState({
@@ -126,7 +131,7 @@ class TransactionManager extends Component {
                               <button
                                   className="btn btn-success"
                                   type="button"
-                                  onClick={() => this.handleSubmit(this.state, "recieved")}>
+                                  onClick={() => this.handleSubmit(this.state, "deposit")}>
                                       Add Money
                               </button>
                               <button

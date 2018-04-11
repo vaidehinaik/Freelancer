@@ -1,10 +1,10 @@
 var mongo = require('../mongo/mongo');
-
+// Mongoose Models
 var usersModel = require('../models/Users');
 var projectsModel = require('../models/Projects');
-
+// MongoDB generated ObjectID
 var ObjectID = require('mongodb').ObjectID;
-
+// Mongoose connection to mongoDB
 var mongoURL =  require('../mongo/mongo_url').url;
 var mongoose = require('mongoose');
 mongoose.connect(mongoURL);

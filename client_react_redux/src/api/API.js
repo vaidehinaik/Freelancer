@@ -197,7 +197,7 @@ export const acceptBid = (projectId) =>
   });
 
   export const doTransaction = (transactions) =>
-    fetch(`${api}/users/transactions`, {
+    fetch(`${api}/users/transaction`, {
       method: 'POST',
       headers: {
         ...headers,
@@ -211,5 +211,3 @@ export const acceptBid = (projectId) =>
         console.log("This is error in do transactions");
         return error;
     });
-
-    

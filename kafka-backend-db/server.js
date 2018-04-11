@@ -13,7 +13,7 @@ let projectAndBidsInfo = require('./db_services/projectAndBidsInfo');
 let updateUserBid = require('./db_services/updateuserbid');
 let userBidProjects = require('./db_services/userbidprojects');
 let userProjects = require('./db_services/userprojects');
-let transactionmanager = require('./db_services/transactionmanager');
+let transaction = require('./db_services/transactionmanager');
 
 let loginConsumer = connection.getConsumerObj(kafka_topics.LOGIN);
 let signupConsumer = connection.getConsumerObj(kafka_topics.SIGNUP);
@@ -25,7 +25,7 @@ let projectAndBidsInfoConsumer = connection.getConsumerObj(kafka_topics.PROJECTA
 let updateUserBidConsumer = connection.getConsumerObj(kafka_topics.UPDATEUSERBID);
 let userBidProjectsConsumer = connection.getConsumerObj(kafka_topics.USERBIDPROJECTS);
 let userProjectsConsumer = connection.getConsumerObj(kafka_topics.USERPROJECTS);
-let transactionmanagerConsumer = connection.getConsumerObj(kafka_topics.TRANSACTIONMANAGER);
+let transactionConsumer = connection.getConsumerObj(kafka_topics.TRANSACTIONMANAGER);
 
 try {
   loginConsumer.on('message', function (message) {
@@ -297,14 +297,14 @@ try {
       }
   });
 
-  transactionmanagerConsumer.on('message', function (message) {
+  transactionConsumer.on('message', function (message) {
       if (message.topic === kafka_topics.TRANSACTIONMANAGER) {
           var data = JSON.parse(message.value);
           console.log('*** transaction message received ***');
-          // console.log(data);
+          console.log("\n**** Message INFO ****:\n " + JSON.stringify(message));
           console.log("Topic: " + data.replyTo);
 
-          signup.handle_request(data.data, function (err, res) {
+          transaction.handle_request(data.data, function (err, res) {
               console.log('\nAfter Handle Response: ' + JSON.stringify(res));
               var payloads = [
                   {
