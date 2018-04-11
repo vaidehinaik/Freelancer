@@ -126,7 +126,7 @@ class TransactionManager extends Component {
                               <button
                                   className="btn btn-success"
                                   type="button"
-                                  onClick={() => this.handleSubmit(this.state, "add")}>
+                                  onClick={() => this.handleSubmit(this.state, "recieved")}>
                                       Add Money
                               </button>
                               <button

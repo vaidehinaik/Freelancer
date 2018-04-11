@@ -41,6 +41,20 @@ let usersSchema = new Schema({
     totalFunds: {
       type: Number
     }
+    transactions: [{
+       amount_type: String
+     },
+      userId: {
+          type: String,
+          ref: 'users'
+      },
+      amount: {
+        type: Number
+      },
+      date_time: {
+        type: Date
+      }
+    }]
 });
 
 usersSchema.plugin(findOrCreate);

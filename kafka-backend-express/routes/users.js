@@ -16,8 +16,8 @@ router.post('/login', function (req, res) {
         }
         if (response.status === 201) {
             req.session.username = response.username;
-            console.log("session initilized: " + req.session.username);
-            res.status(response.status).json({message: response.message, token: req.session.username});
+            console.log("session initilized: " + req.session.id);
+            res.status(response.status).json({message: response.message, token: req.session.id});
         }
         else if (response.status === 401) {
             res.status(response.status).json({message: response.message});
@@ -128,5 +128,37 @@ router.post('/logout',function(req, res) {
     console.log("Logged out successfully ... ");
     res.status(201).json({message: "Logging out ... !!!"});
 });
+
+router.post('/transactions', function(req, res, next) {
+    console.log("\n****************************************************\n");
+    try {
+        console.log("request body: " + JSON.stringify(req.body));
+        kafka.make_request(kafka_topics.TRANSACTIONMANAGER , req.body, function(err, results) {
+            console.log('*** Result *** ' + JSON.stringify(results));
+            if(err){
+                console.log(err);
+                throw err;
+            }
+            else
+            {
+                if(results.status === 201){
+                    console.log("Result - username: " + results.username);
+                    res.status(results.status).json({"message":results.message});
+                }
+                else if(results.status === 200){
+                    res.status(results.status).json({"message":results.message});
+                }
+                else if(results.status === 401) {
+                    res.status(results.status).json({"message":results.message});
+                }
+            }
+        });
+    }
+    catch (e) {
+        console.log("Error in Catch: "  + e);
+        res.status(401).json({message: "Signup Failed"});
+    }
+});
+
 
 module.exports = router;

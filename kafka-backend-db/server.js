@@ -13,6 +13,7 @@ let projectAndBidsInfo = require('./db_services/projectAndBidsInfo');
 let updateUserBid = require('./db_services/updateuserbid');
 let userBidProjects = require('./db_services/userbidprojects');
 let userProjects = require('./db_services/userprojects');
+let transactionmanager = require('./db_services/transactionmanager');
 
 let loginConsumer = connection.getConsumerObj(kafka_topics.LOGIN);
 let signupConsumer = connection.getConsumerObj(kafka_topics.SIGNUP);
@@ -24,6 +25,7 @@ let projectAndBidsInfoConsumer = connection.getConsumerObj(kafka_topics.PROJECTA
 let updateUserBidConsumer = connection.getConsumerObj(kafka_topics.UPDATEUSERBID);
 let userBidProjectsConsumer = connection.getConsumerObj(kafka_topics.USERBIDPROJECTS);
 let userProjectsConsumer = connection.getConsumerObj(kafka_topics.USERPROJECTS);
+let transactionmanagerConsumer = connection.getConsumerObj(kafka_topics.TRANSACTIONMANAGER);
 
 try {
   loginConsumer.on('message', function (message) {
@@ -294,6 +296,34 @@ try {
           });
       }
   });
+
+  transactionmanagerConsumer.on('message', function (message) {
+      if (message.topic === kafka_topics.TRANSACTIONMANAGER) {
+          var data = JSON.parse(message.value);
+          console.log('*** transaction message received ***');
+          // console.log(data);
+          console.log("Topic: " + data.replyTo);
+
+          signup.handle_request(data.data, function (err, res) {
+              console.log('\nAfter Handle Response: ' + JSON.stringify(res));
+              var payloads = [
+                  {
+                      topic: data.replyTo,
+                      messages: JSON.stringify({
+                          correlationId: data.correlationId,
+                          data: res
+                      }),
+                      partition: 0
+                  }
+              ];
+              producer.send(payloads, function (err, data) {
+                  // console.log("\npayloads: " + JSON.stringify(payloads));
+                  console.log("\n****************************************************\n");
+              });
+          });
+      }
+  });
+
 } catch (error) {
     console.log("Error: " + error);
 }
