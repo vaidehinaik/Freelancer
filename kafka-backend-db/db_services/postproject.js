@@ -5,9 +5,9 @@ var projectsModel = require('../models/Projects');
 // MongoDB generated ObjectID
 var ObjectID = require('mongodb').ObjectID;
 // Mongoose connection to mongoDB
-var mongoURL =  require('../mongo/mongo_url').url;
-var mongoose = require('mongoose');
-mongoose.connect(mongoURL);
+// var mongoURL =  require('../mongo/mongo_url').url;
+// var mongoose = require('mongoose');
+// mongoose.connect(mongoURL);
 
 handle_request = ((data, callback) => {
     let err=null;

@@ -1,5 +1,5 @@
-var mongo = require("../mongo/mongo");
-var mongoURL =  require('../mongo/mongo_url').url;
+// var mongo = require("../mongo/mongo");
+// var mongoURL =  require('../mongo/mongo_url').url;
 var usersModel = require('../models/Users');
 
 handle_request = ((data, callback) => {
@@ -13,29 +13,30 @@ handle_request = ((data, callback) => {
                 aboutMe: data.aboutMe,
                 skills: data.skills
             }};
-            mongo.connect(mongoURL, function () {
-            var userscollection = mongo.collection("users");
-                userscollection.findOneAndUpdate({username:data.username}, updateQuery, {new: true}, function (err, results) {
-                    console.log(results);
-                    if (err) {
-                        throw err;
-                    }
-                    if (results !== null) {
-                        console.log("updated user profile: " + JSON.stringify(results));
-                        response.status = 201;
-                        response.message = "user profile successfully";
-                        callback(null, response);
-                    }
-                    else {
-                        response.status = 401;
-                        response.message = "Failed to Update Profile";
-                        callback(null, response);
-                    }
-                });
+            console.log("updating query: " + JSON.stringify(updateQuery));
+            usersModel.findOneAndUpdate({username: data.username},
+              updateQuery,
+              {new: true},
+              function (err, result) {
+                if (err) {
+                  console.log("error: " + err);
+                  throw err;
+                }
+                if (result !== null) {
+                    console.log("updated user profile: " + JSON.stringify(result));
+                    response.status = 201;
+                    response.message = "user profile successfully";
+                    callback(null, response);
+                }
+                else {
+                    response.status = 401;
+                    response.message = "Failed to Update Profile";
+                    callback(null, response);
+                }
             });
         }
     }
-    catch (e){
+    catch (e) {
         console.log(e);
         response.status = 401;
         response.message = "Error while updating user profile";

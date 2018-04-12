@@ -1,8 +1,7 @@
 var projectsModel = require('../models/Projects');
-var mongoURL =  require('../mongo/mongo_url').url;
-
-var mongoose = require('mongoose');
-mongoose.connect(mongoURL);
+// var mongoURL =  require('../mongo/mongo_url').url;
+// var mongoose = require('mongoose');
+// mongoose.connect(mongoURL);
 
 handle_request = ((callback) => {
     let res = {};

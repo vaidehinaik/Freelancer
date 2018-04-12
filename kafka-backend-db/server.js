@@ -1,8 +1,10 @@
 let connection =  new require('./kafka/Connection');
 let kafka_topics =  require('./kafka_topics').kafka_topic_enums;
+let mongoConnect = require('./mongo/mongooseConnection');
 
+// get producer object
 let producer = connection.getProducer();
-
+// get all consumer objects
 let login = require('./db_services/login');
 let signup = require('./db_services/signup');
 let userinfo = require('./db_services/userinfo');
