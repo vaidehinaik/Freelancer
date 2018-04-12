@@ -196,18 +196,34 @@ export const acceptBid = (projectId) =>
       return error;
   });
 
-  export const doTransaction = (transactions) =>
+  export const doTransaction = (payload) =>
     fetch(`${api}/users/transaction`, {
       method: 'POST',
       headers: {
         ...headers,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({transactions})
+      body: JSON.stringify(payload)
       }).then(res => {
         return res;
       })
       .catch(error => {
         console.log("This is error in do transactions");
+        return error;
+    });
+
+  export const allTransactions = (username) =>
+    fetch(`${api}/users/alltransactions`, {
+      method: 'POST',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({"username": username})
+      }).then(res => {
+        return res;
+      })
+      .catch(error => {
+        console.log("This is error in getting all transactions");
         return error;
     });

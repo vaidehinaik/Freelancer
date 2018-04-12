@@ -24,6 +24,8 @@ handle_request = ((data, callback)=> {
                 res.username = result.username;
                 res.skills =  result.skills;
                 res.message = "user info data";
+                res.transactions = result.transactions;
+                res.totalFunds = result.totalFunds;
                 callback(err, res);
             }
             else {

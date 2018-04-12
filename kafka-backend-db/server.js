@@ -16,6 +16,8 @@ let updateUserBid = require('./db_services/updateuserbid');
 let userBidProjects = require('./db_services/userbidprojects');
 let userProjects = require('./db_services/userprojects');
 let transaction = require('./db_services/transactionmanager');
+let alltransactions = require('./db_services/alltransactions');
+
 
 let loginConsumer = connection.getConsumerObj(kafka_topics.LOGIN);
 let signupConsumer = connection.getConsumerObj(kafka_topics.SIGNUP);
@@ -28,6 +30,7 @@ let updateUserBidConsumer = connection.getConsumerObj(kafka_topics.UPDATEUSERBID
 let userBidProjectsConsumer = connection.getConsumerObj(kafka_topics.USERBIDPROJECTS);
 let userProjectsConsumer = connection.getConsumerObj(kafka_topics.USERPROJECTS);
 let transactionConsumer = connection.getConsumerObj(kafka_topics.TRANSACTIONMANAGER);
+let alltransactionsConsumer = connection.getConsumerObj(kafka_topics.ALLTRANSACTIONS);
 
 try {
   loginConsumer.on('message', function (message) {
@@ -325,6 +328,34 @@ try {
           });
       }
   });
+
+  alltransactionsConsumer.on('message', function (message) {
+      if (message.topic === kafka_topics.ALLTRANSACTIONS) {
+          var data = JSON.parse(message.value);
+          console.log('*** Message recieved for all transactions ***');
+          console.log("\n**** Message INFO ****:\n " + JSON.stringify(message));
+          console.log("Topic: " + data.replyTo);
+
+          alltransactions.handle_request(data.data, function (err, res) {
+              console.log('\nAfter Handle Response: ' + JSON.stringify(res));
+              var payloads = [
+                  {
+                      topic: data.replyTo,
+                      messages: JSON.stringify({
+                          correlationId: data.correlationId,
+                          data: res
+                      }),
+                      partition: 0
+                  }
+              ];
+              producer.send(payloads, function (err, data) {
+                  // console.log("\npayloads: " + JSON.stringify(payloads));
+                  console.log("\n****************************************************\n");
+              });
+          });
+      }
+  });
+
 
 } catch (error) {
     console.log("Error: " + error);

@@ -30,6 +30,7 @@ class TransactionManager extends Component {
 
     componentDidMount() {
       document.getElementById("inputErr").style.visibility = "hidden";
+      // API.allTransactions(this.state.username)
     }
 
     handleInputFunds = (event) => {
