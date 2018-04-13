@@ -167,7 +167,7 @@ router.post('/alltransactions', function(req, res, next) {
             }
             else {
                 if(result.status === 201) {
-                    res.status(result.status).json({"result": result});
+                    res.status(result.status).json(result);
                 }
                 else if(result.status === 401) {
                     res.status(result.status).json({"message":result.message});

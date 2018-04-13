@@ -2,10 +2,6 @@ var mongo = require('../mongo/mongo');
 // Mongoose Models
 var usersModel = require('../models/Users');
 var projectsModel = require('../models/Projects');
-// Mongoose connection to mongoDB
-// var mongoURL =  require('../mongo/mongo_url').url;
-// var mongoose = require('mongoose');
-// mongoose.connect(mongoURL);
 
 handle_request = ((data, callback) => {
     let err=null;
@@ -21,7 +17,7 @@ handle_request = ((data, callback) => {
             if (result) {
                 console.log("User found: " + result.userId);
                 console.log("User funds: " + result.totalFunds);
-                var amount = data.amount;
+                var amount = parseInt(data.amount);
                 if(data.amountType === "withdraw") {
                   // newFunds = newFunds - data.amount;
                     amount = -1 * data.amount;

@@ -1,10 +1,6 @@
 var projectsModel = require('../models/Projects');
 var usersModel = require('../models/Users');
 
-// var mongoURL =  require('../mongo/mongo_url').url;
-// var mongoose = require('mongoose');
-// mongoose.connect(mongoURL);
-
 handle_request = ((data, callback) => {
     let res = {};
     try {
