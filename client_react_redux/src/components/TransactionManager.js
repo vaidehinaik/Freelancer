@@ -29,8 +29,42 @@ class TransactionManager extends Component {
     }
 
     componentDidMount() {
-      document.getElementById("inputErr").style.visibility = "hidden";
-      // API.allTransactions(this.state.username)
+        document.getElementById("inputErr").style.visibility = "hidden";
+        API.allTransactions(payload)
+           .then((res) => {
+               status = res.status;
+               try {
+                   return res.json();
+                }
+                catch(error) {
+                  console.log("Error in response: " + error);
+                }
+            }).then((json) => {
+               if (status === 201) {
+                  this.props.udpateTotalFunds({"total_funds": json.total_funds});
+                  this.props.updateTransactions({"transactions": json.transactions});
+                  localStorage.setItem('total_funds', json.total_funds);
+                  localStorage.setItem('transactions', json.transactions);
+                  this.setState({
+                     message: json.message
+                  });
+                } else if (status === 401) {
+                    const message = "Something went wrong. Try again !!!"
+                    this.setState({
+                       message: json.message
+                    });
+                    this.displayErrMsg();
+                    this.notify(json.message);
+                } else {
+                    const message = "Server error... Try again later !!!"
+                    this.setState({
+                       message: json.message
+                    });
+                    this.displayErrMsg();
+                    this.notify(json.message);
+               }
+            });
+        }
     }
 
     handleInputFunds = (event) => {
@@ -104,53 +138,58 @@ class TransactionManager extends Component {
           return (
             <div className="container-fluid">
                 <div className="row justify-content-md-center">
-                    <img src="/fl-logo.svg" height="150" width="300" className="left-block" alt="logo"/>
+                    <img src="/fl-logo.svg" height="150" width="200" className="left-block" alt="logo"/>
                 </div>
-                <br></br><br></br>
+                <br>
                 <div className="row">
                   <div className="col-md-12 col-md-offset-2 mx-auto">
                     <Navbar />
                   </div>
-                  <div className="panel panel-primary">
-                    <div className="panel-body">
-                      <form>
-                          <div className="form-group">
-                              <h3><i>{this.props.pick.username} Transactions</i></h3>
-                              <br></br>
-                          </div>
-                          <div className="form-group">
-                              <input
-                                  className="form-control"
-                                  type="text"
-                                  label="amount"
-                                  placeholder="Input Amount"
-                                  value={this.state.input_fund}
-                                  onChange={this.handleInputFunds}
-                              />
-                          </div>
-                          <div className="form-group">
-                              <button
-                                  className="btn btn-success"
-                                  type="button"
-                                  onClick={() => this.handleSubmit(this.state, "deposit")}>
-                                      Add Money
-                              </button>
-                              <button
-                                  className="btn btn-danger"
-                                  type="button"
-                                  onClick={() => this.handleSubmit(this.state, "withdraw")}>
-                                      Withdraw
-                              </button>
-                              <hr></hr>
-                          </div>
-                          <div className="form-group">
-                              <div id="inputErr" className="alert alert-danger">
-                                  <Octicon name="alert"/>
-                              </div>
-                              <ToastContainer />
-                          </div>
-                      </form>
+                  <div className="col">
+                    <div className="panel panel-primary">
+                      <div className="panel-body">
+                        <form>
+                            <div className="form-group">
+                                <h3><i>{this.props.pick.username} Transactions</i></h3>
+                                <br></br>
+                            </div>
+                            <div className="form-group">
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    label="amount"
+                                    placeholder="Input Amount"
+                                    value={this.state.input_fund}
+                                    onChange={this.handleInputFunds}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <button
+                                    className="btn btn-success"
+                                    type="button"
+                                    onClick={() => this.handleSubmit(this.state, "deposit")}>
+                                        Add Money
+                                </button>
+                                <button
+                                    className="btn btn-danger"
+                                    type="button"
+                                    onClick={() => this.handleSubmit(this.state, "withdraw")}>
+                                        Withdraw
+                                </button>
+                                <hr></hr>
+                            </div>
+                            <div className="form-group">
+                                <div id="inputErr" className="alert alert-danger">
+                                    <Octicon name="alert"/>
+                                </div>
+                                <ToastContainer />
+                            </div>
+                        </form>
+                      </div>
                     </div>
+                  </div>
+                  <div className="col">
+
                   </div>
                 </div>
             </div>
@@ -172,7 +211,13 @@ class TransactionManager extends Component {
                   payload: {total_funds: payload.total_funds}
               });
           },
+          updateTransactions: (payload) => {
+            dispatch({
+                type: "TRANSACTIONS",
+                payload: {transactions : payload.transactions}
+            });
       };
-  };
+   };
+};
 
 export default withRouter(connect(mapStateToProps,mapDispatchToProps)(TransactionManager));
