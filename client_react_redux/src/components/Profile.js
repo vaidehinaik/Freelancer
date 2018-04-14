@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import * as API from '../api/API';
+import Navbar from './Navbar';
 import cookie from 'react-cookies';
 import {connect} from 'react-redux';
 import ReactTooltip from 'react-tooltip';
@@ -104,10 +105,7 @@ class Profile extends Component {
                 <img src="/fl-logo.svg" height="80" width="160" className="left-block" alt="logo"/>
             </div>
             <div className="col-md-12 ">
-              <Link to={`/home`} className="link">
-                  <ReactTooltip />
-                  <HomeIcon color={blue500} hoverColor={green600} style={{width:50, height:50}} data-tip="Home"/>
-              </Link>
+              <Navbar />
               <div className="panel panel-primary">
                 <div className="panel-body">
                   <div className="float-right">

@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import Navbar from './Navbar';
 import * as zoom from 'chartjs-plugin-zoom';
 
-var options={
+var options= {
 pan:{
     enabled:true,
     mode:'x'
@@ -303,7 +303,13 @@ class TransactionManager extends Component {
                           "No Transactions History Yet ..."
                           <span>&nbsp;&nbsp;&nbsp;</span>
                         </i></h2>;
-      if (this.props.transactions.length != 0) {
+      let my_trans;
+      if (this.props.transactions === null) {
+        my_trans = [];
+      } else {
+        my_trans = this.props.transactions;
+      }
+      if (my_trans.length !== 0) {
           transactions = this.props.transactions.map((transaction, index) => {
               let type_of_amount = "";
               let name = transaction.userId.name;
@@ -332,7 +338,7 @@ class TransactionManager extends Component {
       return (
         <div className="container-fluid">
           <h3><i><b>
-            TOTAL TRANSACTIONS: {this.props.transactions.length}
+            TOTAL TRANSACTIONS: {my_trans.length}
           </b></i></h3>
           <br/><hr/>
           {transactions}
