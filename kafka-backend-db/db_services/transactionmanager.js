@@ -19,10 +19,8 @@ handle_request = ((data, callback) => {
                 console.log("User funds: " + result.totalFunds);
                 var amount = parseInt(data.amount);
                 if(data.amountType === "withdraw") {
-                  // newFunds = newFunds - data.amount;
                     amount = -1 * data.amount;
                 } else if(data.amountType === "deposit") {
-                  // newFunds = newFunds + data.amount;
                     amount = 1 * data.amount;
                 } else {
                   response.status = 401;

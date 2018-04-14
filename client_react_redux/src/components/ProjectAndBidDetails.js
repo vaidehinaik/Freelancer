@@ -5,6 +5,7 @@ import cookie from 'react-cookies';
 import {connect} from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import Navbar from './Navbar';
+import { Container, Block, Row, Column, Spacer } from 'react-email-components'
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { withStyles } from 'material-ui/styles';
@@ -174,10 +175,10 @@ class ProfileCreator extends Component {
   constructor (props) {
         super(props)
         this.state = {
-          message: ''
+          message: '',
+          bids: JSON.parse(localStorage.getItem("userProfilesWithBids")),
+          acceptButton: ''
         };
-        this.notifySuccess = this.notifySuccess.bind(this);
-        this.notify = this.notify.bind(this);
   }
 
   notify = (message) => {
@@ -196,7 +197,10 @@ class ProfileCreator extends Component {
 
   handleAccept() {
     var status;
-    API.acceptBid(localStorage.getItem('projectId'))
+    console.log("employee ID: " + this.props.userProfile.userId.userId);
+    var employeeId = this.props.userProfile.userId.userId;
+    var projectId = localStorage.getItem('projectId');
+    API.acceptBid(projectId, employeeId)
         .then((res) => {
             status = res.status;
             return res.json();
@@ -205,35 +209,44 @@ class ProfileCreator extends Component {
                 this.setState({
                     message: json.message
                 });
-                this.notifySuccess(json.message);
+                notifySuccess(json.message);
             } else if (status === 200) {
                 this.setState({
                     message: json.message
                 });
-                this.notifySuccess(json.message);
+                notifySuccess(json.message);
             } else if (status === 401) {
                 const message = "Something went wrong. Try signing up again !!!"
                 this.setState({
                     message: message
                 });
-                this.notify(message);
+                notify(message);
             } else {
                 const message = "Server error... Try signing up later !!!"
                 this.setState({
                     message: message
                 });
-                this.notify(message);
+                notify(message);
             }
     });
   }
 
-  render () {
+  componentDidMount() {
+    console.log("did mount called: " + this.props.userProfile.userId.userId);
     let prj_details = JSON.parse(localStorage.getItem('projectDetails'));
     let acceptButton = localStorage.getItem('username') === prj_details.username ? <button className="btn btn-success"
                                                                                           type="button"
+                                                                                          id="hireButton"
+                                                                                          value={this.props.userProfile.userId.userId}
                                                                                           onClick={this.handleAccept.bind(this)}>
-                                                                                      Accept
+                                                                                      Hire
                                                                                     </button>: "";
+    this.setState({
+      acceptButton: acceptButton
+    });
+  }
+
+  render () {
     return (
       <div className="col">
         <FaceIcon color="primary" style={{ fontSize: 30 }}/>
@@ -249,7 +262,7 @@ class ProfileCreator extends Component {
         <h4><i><b>Time Estimation in Days:</b></i></h4>
         <p>{this.props.userProfile.periodInDays}</p>
         <br/><hr/>
-        {acceptButton}
+        {this.state.acceptButton}
         <br/><hr/><hr/>
         <div className="form-group">
           <ToastContainer />

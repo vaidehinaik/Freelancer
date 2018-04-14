@@ -12,5 +12,6 @@ exports.kafka_topic_enums = {
     USERBIDPROJECTS: 'userbidprojects_topic',
     USERPROJECTS: 'userprojects_topic',
     TRANSACTIONMANAGER: 'transactionmanager_topic',
-    ALLTRANSACTIONS: 'alltransactions_topic'
+    ALLTRANSACTIONS: 'alltransactions_topic',
+    ACCEPTPROJECT: 'acceptproject_topic'
 };

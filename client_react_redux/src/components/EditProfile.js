@@ -9,16 +9,6 @@ import ChipInput from 'material-ui-chip-input';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {blue500, red500, green600} from 'material-ui/styles/colors';
 
-const styles = {
-  chip: {
-    margin: 4
-  },
-  wrapper: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  }
-}
-
 const skill_data = [
   "Java",
   "Python",

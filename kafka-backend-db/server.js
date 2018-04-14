@@ -17,6 +17,7 @@ let userBidProjects = require('./db_services/userbidprojects');
 let userProjects = require('./db_services/userprojects');
 let transaction = require('./db_services/transactionmanager');
 let alltransactions = require('./db_services/alltransactions');
+let acceptproject = require('./db_services/acceptproject');
 
 
 let loginConsumer = connection.getConsumerObj(kafka_topics.LOGIN);
@@ -31,6 +32,7 @@ let userBidProjectsConsumer = connection.getConsumerObj(kafka_topics.USERBIDPROJ
 let userProjectsConsumer = connection.getConsumerObj(kafka_topics.USERPROJECTS);
 let transactionConsumer = connection.getConsumerObj(kafka_topics.TRANSACTIONMANAGER);
 let alltransactionsConsumer = connection.getConsumerObj(kafka_topics.ALLTRANSACTIONS);
+let acceptprojectConsumer = connection.getConsumerObj(kafka_topics.ACCEPTPROJECT);
 
 try {
   loginConsumer.on('message', function (message) {
@@ -356,6 +358,30 @@ try {
       }
   });
 
+  acceptprojectConsumer.on('message', function (message) {
+      if (message.topic === kafka_topics.ACCEPTPROJECT) {
+          var data = JSON.parse(message.value);
+          console.log('*** Message recieved for accept project ***');
+          console.log("Topic: " + data.replyTo);
+
+          acceptproject.handle_request(data.data, function (err, res) {
+              console.log('\nAfter Handle Response: ' + JSON.stringify(res));
+              var payloads = [
+                  {
+                      topic: data.replyTo,
+                      messages: JSON.stringify({
+                          correlationId: data.correlationId,
+                          data: res
+                      }),
+                      partition: 0
+                  }
+              ];
+              producer.send(payloads, function (err, data) {
+                  console.log("\n****************************************************\n");
+              });
+          });
+      }
+  });
 
 } catch (error) {
     console.log("Error: " + error);

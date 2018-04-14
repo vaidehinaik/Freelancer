@@ -1,10 +1,6 @@
 var mongo = require("../mongo/mongo");
-// var mongoURL =  require('../mongo/mongo_url').url;
 var usersModel = require('../models/Users');
 var projectsModel = require('../models/Projects');
-// var mongoose = require('mongoose');
-// native promises
-// mongoose.Promise = global.Promise;
 
 handle_request = ((data, callback) => {
     var response = {};

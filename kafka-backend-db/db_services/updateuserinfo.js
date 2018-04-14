@@ -1,5 +1,3 @@
-// var mongo = require("../mongo/mongo");
-// var mongoURL =  require('../mongo/mongo_url').url;
 var usersModel = require('../models/Users');
 
 handle_request = ((data, callback) => {

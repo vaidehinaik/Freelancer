@@ -11,16 +11,15 @@ import Navbar from './Navbar';
 import * as zoom from 'chartjs-plugin-zoom';
 
 var options= {
-pan:{
-    enabled:true,
-    mode:'x'
- },
-zoom:{
-    enabled:true,
-    mode:'xy'
+  pan:{
+      enabled:true,
+      mode:'x'
+   },
+  zoom:{
+      enabled:true,
+      mode:'xy'
+  }
 }
-}
-
 
 class TransactionManager extends Component {
 
@@ -203,13 +202,12 @@ class TransactionManager extends Component {
                   };
 
           return (
-            <div className="container-fluid">
+            <div className="container">
                 <div className="row justify-content-md-center">
                     <img src="/fl-logo.svg" height="150" width="200" className="left-block" alt="logo"/>
-                </div>
-
-                <div className="col-md-12 col-md-offset-2 mx-auto">
-                  <Navbar />
+                    <div className="col-md-12 col-md-offset-2 mx-auto">
+                      <Navbar />
+                    </div>
                 </div>
                 <br/>
                 <div className="row">
@@ -260,26 +258,30 @@ class TransactionManager extends Component {
                     </div>
                   </div>
                   <div className="col">
-                    <Card>
-                      <CardHeader>
-                          <label className="h4">Pie Chart</label>
-                      </CardHeader>
-                      <Card style={{position: "relative",height:"240px"}}>
-                        <CardHeader>
-                            Incoming Outgoing Income
-                            <div className="card-actions">
-                                <a href="#">
-                                    <small className="text-muted">Zoom In</small>
-                                </a>
-                            </div>
-                        </CardHeader>
-                        <CardBody>
-                            <div className="chart-wrapper">
-                              <Pie data={chartData} options={options}/>
-                            </div>
-                        </CardBody>
-                      </Card>
-                    </Card>
+                    <div className="panel panel-primary">
+                      <div className="panel-body">
+                        <Card>
+                          <CardHeader>
+                              <label className="h4">Pie Chart</label>
+                          </CardHeader>
+                          <Card>
+                            <CardHeader>
+                                Incoming Outgoing Income
+                                <div className="card-actions">
+                                    <a href="#">
+                                        <small className="text-muted">Zoom In</small>
+                                    </a>
+                                </div>
+                            </CardHeader>
+                            <CardBody>
+                                <div className="chart-wrapper">
+                                  <Pie data={chartData} options={options}/>
+                                </div>
+                            </CardBody>
+                          </Card>
+                        </Card>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="panel panel-primary">

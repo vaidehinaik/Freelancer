@@ -2,10 +2,6 @@ var bcrypt = require('bcrypt');
 var usersModel = require('../models/Users');
 var ObjectID = require('mongodb').ObjectID;
 
-// var mongoURL =  require('../mongo/mongo_url').url;
-// var mongoose = require('mongoose');
-// mongoose.connect(mongoURL);
-
 handle_request = ((data, callback) => {
     var err=null;
     var response = {};

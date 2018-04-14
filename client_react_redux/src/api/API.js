@@ -180,14 +180,14 @@ export const userBid = (payload) =>
       return error;
   });
 
-export const acceptBid = (projectId) =>
+export const acceptBid = (projectId, employeeId) =>
   fetch(`${api}/projects/acceptproject`, {
     method: 'POST',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({projectId: projectId})
+    body: JSON.stringify({projectId: projectId, employeeId: employeeId})
     }).then(res => {
       return res;
     })

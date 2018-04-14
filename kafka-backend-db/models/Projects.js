@@ -23,6 +23,13 @@ let projectsSchema = new Schema({
       max: 1,
       default: 0
     },
+    completed: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 1,
+      default: 0
+    },
     title: {
       type: String,
       required: true
@@ -56,6 +63,13 @@ let projectsSchema = new Schema({
         },
         periodInDays: {
             type: Number
+        },
+        bidStatus: {
+          type: Number,
+          required: true,
+          min: 0,
+          max: 1,
+          default: 0
         }
     }]
 });

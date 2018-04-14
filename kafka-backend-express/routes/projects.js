@@ -130,4 +130,26 @@ router.post('/projectandbids', function(req, res) {
     }
 });
 
+router.post('/acceptproject', function(req, res) {
+  console.log("\n****************************************************\n");
+  try {
+      console.log("accept project: " + JSON.stringify(req.body));
+      kafka.make_request(kafka_topics.ACCEPTPROJECT , req.body, function(err, results) {
+            if(err) {
+                console.log(err);
+                throw err;
+            }
+            else if(results.status === 201) {
+                res.status(results.status).json({message: results.message});
+            } else {
+                res.status(results.status).json({message: results.message});
+            }
+        });
+  }
+  catch (e) {
+      console.log("Error in catch: " + e);
+      res.status(401).json({message: "failed to accept project bid"});
+  }
+});
+
 module.exports = router;
