@@ -33,8 +33,6 @@ class ProjectAndBids extends Component {
 
   componentDidMount() {
     console.log("Profile did mount called ... ");
-    console.log("project id is : " + this.props.pick.projectId);
-    console.log("project id state : " + this.state.projectId);
     if(cookie.load('token') === undefined) {
       // Redirect to login page if cookie not found
       this.props.history.push('/');
@@ -82,6 +80,9 @@ class ProjectAndBids extends Component {
                         this.props.pick.projectDetails.username
                               ? "" : <Bid bidrange={{low: this.props.pick.projectDetails.budgetLow,
                                                     high: this.props.pick.projectDetails.budgetHigh}}/>
+      let BidderDetailsView = this.props.pick.projectDetails.status === 1
+                              ? <EmployeeDetails userProfiles={this.props.pick.userProfilesWithBids}/> :
+                              <UserProfiles userProfiles={this.props.pick.userProfilesWithBids}/>
       return (
         <MuiThemeProvider>
           <div className="container-fluid">
@@ -128,13 +129,11 @@ class ProjectAndBids extends Component {
               <div className="panel panel-primary">
                 <div className="panel-body">
                   <div className="panel-body">
-                      <h2 className="text-center"><b>*** BIDDERS DETAILS ***</b></h2>
                       <hr></hr><br/>
-                      <UserProfiles userProfiles={this.props.pick.userProfilesWithBids}/>
+                      {BidderDetailsView}
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </MuiThemeProvider>
@@ -142,9 +141,38 @@ class ProjectAndBids extends Component {
     }
 }
 
+class EmployeeDetails extends Component {
+
+  render() {
+    let employee = [];
+    employee = this.props.userProfiles.map((userProfile, index) => {
+        if (userProfile.bidStatus === 1) {
+            return
+                <div key={index} className="row">
+                    <h2 className="text-center"><b>*** Employee Details ***</b></h2>
+                    <FaceIcon color="primary" style={{ fontSize: 30 }}/>
+                    <h4><i>Name:</i></h4>
+                    <p>{userProfile.name}</p><hr/>
+                    <h4><i>Contact:</i></h4>
+                    <p>{userProfile.contact}</p><hr/>
+                    <h4><i><b>Bid Amount:</b></i></h4>
+                    <p>{userProfile.bidAmount}</p><hr/>
+                    <h4><i><b>Time Estimation in Days:</b></i></h4>
+                    <p>{userProfile.periodInDays}</p><br/><hr/>
+                </div>
+        }
+    });
+    return (
+      <div className="container-fluid">
+        {employee}
+      </div>
+    );
+  }
+}
+
 class UserProfiles extends Component {
 
-  render () {
+  render() {
     let userProfiles = <h2><i>
                         "No bidders yet"
                         <span>&nbsp;&nbsp;&nbsp;</span>
@@ -157,6 +185,7 @@ class UserProfiles extends Component {
     }
     return (
       <div className="container-fluid">
+        <h2 className="text-center"><b>*** BIDDERS DETAILS ***</b></h2>
         <h3><i><b>
           <PeopleIcon style={{width:50, height:50}}/>
           <span>
@@ -190,7 +219,7 @@ class ProfileCreator extends Component {
 
   notifySuccess = (message) => {
     toast.success(message, {
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.BOTTOM_CENTER,
         autoClose: 3000
     });
   }
@@ -209,24 +238,23 @@ class ProfileCreator extends Component {
                 this.setState({
                     message: json.message
                 });
-                notifySuccess(json.message);
             } else if (status === 200) {
                 this.setState({
                     message: json.message
                 });
-                notifySuccess(json.message);
+                this.notifySuccess(json.message);
             } else if (status === 401) {
                 const message = "Something went wrong. Try signing up again !!!"
                 this.setState({
                     message: message
                 });
-                notify(message);
+                this.notify(message);
             } else {
                 const message = "Server error... Try signing up later !!!"
                 this.setState({
                     message: message
                 });
-                notify(message);
+                this.notify(message);
             }
     });
   }
@@ -262,7 +290,8 @@ class ProfileCreator extends Component {
         <h4><i><b>Time Estimation in Days:</b></i></h4>
         <p>{this.props.userProfile.periodInDays}</p>
         <br/><hr/>
-        {this.state.acceptButton}
+        <Link to={`/home`}>{this.state.acceptButton}</Link>
+
         <br/><hr/><hr/>
         <div className="form-group">
           <ToastContainer />
