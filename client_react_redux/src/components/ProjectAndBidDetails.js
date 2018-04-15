@@ -77,11 +77,11 @@ class ProjectAndBids extends Component {
 
   render() {
       let BidForm = localStorage.getItem('username') ===
-                        this.props.pick.projectDetails.username
+                        this.props.pick.projectDetails.username ||  this.props.pick.projectDetails.status === 1
                               ? "" : <Bid bidrange={{low: this.props.pick.projectDetails.budgetLow,
                                                     high: this.props.pick.projectDetails.budgetHigh}}/>
       let BidderDetailsView = this.props.pick.projectDetails.status === 1
-                              ? <EmployeeDetails userProfiles={this.props.pick.userProfilesWithBids}/> :
+                              ? <EmployeeDetails userProfiles={this.props.pick.userProfilesWithBids} projectDetails={this.props.pick.projectDetails}/> :
                               <UserProfiles userProfiles={this.props.pick.userProfilesWithBids}/>
       return (
         <MuiThemeProvider>
@@ -143,30 +143,115 @@ class ProjectAndBids extends Component {
 
 class EmployeeDetails extends Component {
 
-  render() {
-    let employee = [];
-    employee = this.props.userProfiles.map((userProfile, index) => {
-        if (userProfile.bidStatus === 1) {
-            return
-                <div key={index} className="row">
-                    <h2 className="text-center"><b>*** Employee Details ***</b></h2>
-                    <FaceIcon color="primary" style={{ fontSize: 30 }}/>
-                    <h4><i>Name:</i></h4>
-                    <p>{userProfile.name}</p><hr/>
-                    <h4><i>Contact:</i></h4>
-                    <p>{userProfile.contact}</p><hr/>
-                    <h4><i><b>Bid Amount:</b></i></h4>
-                    <p>{userProfile.bidAmount}</p><hr/>
-                    <h4><i><b>Time Estimation in Days:</b></i></h4>
-                    <p>{userProfile.periodInDays}</p><br/><hr/>
-                </div>
+  constructor (props) {
+        super(props)
+        this.state = {
+          displayInfo: "",
+          markCompleteButton: "",
+          makePaymentInfo: ""
+        };
+  }
+
+  componentDidMount() {
+      console.log("did mount of employee details called ...");
+      let employee = null;
+      this.props.userProfiles.forEach(function(freelancerInfo) {
+        if (freelancerInfo.bidStatus === 1) {
+          employee = freelancerInfo;
         }
-    });
+      });
+      let displayInfo = "";
+      let makePaymentInfo = "";
+      let markCompleteButton = "";
+      if (employee !== null) {
+          markCompleteButton = localStorage.getItem('username') === employee.userId.username ? <button className="btn btn-success"
+                                                                                                       type="button"
+                                                                                                       id="hireButton"
+                                                                                                       value={this.props.projectDetails.projectId}
+                                                                                                       onClick={this.markProjectCompleted.bind(this)}>
+                                                                                                Mark as Complete
+                                                                                              </button>: "";
+          makePaymentInfo = localStorage.getItem('username') === this.props.projectDetails.username
+                              &&  this.props.projectDetails.completed === 1 ? <div className="container">
+                                                                                <PaymentsDiv employee={employee} projectDetails={this.props.projectDetails}/>
+                                                                              </div>: "Project in progress";
+
+
+          displayInfo = <div className="col">
+                            <h2 className="text-center"><b>*** Employee Details ***</b></h2><br/>
+                              <FaceIcon color="primary" style={{ fontSize: 30 }}/>
+                            <h4><i>Name:</i></h4><br/>
+                              <p>{employee.name}</p><hr/>
+                            <h4><i>Contact:</i></h4><br/>
+                              <p>{employee.contact}</p><hr/>
+                            <h4><i><b>Bid Amount:</b></i></h4><br/>
+                              <p>{employee.bidAmount}</p><hr/>
+                            <h4><i><b>Time Estimation in Days:</b></i></h4><br/>
+                              <p>{employee.periodInDays}</p><br/><hr/>
+                            {markCompleteButton}
+                            {makePaymentInfo}
+                        </div>
+      }
+      this.setState({
+        displayInfo: displayInfo,
+        markCompleteButton: markCompleteButton,
+        makePaymentInfo: makePaymentInfo
+      });
+  }
+
+  markProjectCompleted() {
+    
+  }
+
+  render() {
     return (
       <div className="container-fluid">
-        {employee}
+        <div className="row">
+          {this.state.displayInfo}
+        </div>
       </div>
     );
+  }
+}
+
+class PaymentsDiv extends Component {
+  makePayment() {
+
+  }
+  render() {
+    console.log("makepayemtns div : " + JSON.stringify(this.props.employee));
+    return <div className="row justify-content-md-center">
+              <div className="panel panel-primary">
+                <div className="panel-body">
+                  <form>
+                    <div className="form-group">
+                        <label htmlFor="Make Payment">
+                          <b><AttachMoneyIcon color="primary" style={{ fontSize: 10 }}/></b>
+                          <span>&nbsp;Amount: &nbsp;</span>
+                        </label>
+                        <input
+                            className="form-control"
+                            type="text"
+                            id="BidAmount"
+                            placeholder="Amount ($)"
+                            required="required"
+                            value={this.props.employee.bidAmount}
+                            onChange={this.makePayment}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <button
+                            className="btn btn-primary"
+                            type="button"
+                            onClick={this.handleSubmit}>
+                                Make Payment
+                        </button>
+                        <hr></hr>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
   }
 }
 
