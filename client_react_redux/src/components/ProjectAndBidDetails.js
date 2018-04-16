@@ -148,7 +148,8 @@ class EmployeeDetails extends Component {
         this.state = {
           displayInfo: "",
           markCompleteButton: "",
-          makePaymentInfo: ""
+          makePaymentInfo: "",
+          message: ""
         };
   }
 
@@ -164,17 +165,17 @@ class EmployeeDetails extends Component {
       let makePaymentInfo = "";
       let markCompleteButton = "";
       if (employee !== null) {
-          markCompleteButton = localStorage.getItem('username') === employee.userId.username ? <button className="btn btn-success"
-                                                                                                       type="button"
-                                                                                                       id="hireButton"
-                                                                                                       value={this.props.projectDetails.projectId}
-                                                                                                       onClick={this.markProjectCompleted.bind(this)}>
-                                                                                                Mark as Complete
-                                                                                              </button>: "";
+          markCompleteButton = localStorage.getItem('username') === employee.userId.username ? <Link to={`/home`}>
+                                                                                                  <button className="btn btn-success"
+                                                                                                          type="button"
+                                                                                                          onClick={this.markProjectCompleted.bind(this)}>
+                                                                                                      Mark as Complete
+                                                                                                  </button>
+                                                                                               </Link>: "";
           makePaymentInfo = localStorage.getItem('username') === this.props.projectDetails.username
                               &&  this.props.projectDetails.completed === 1 ? <div className="container">
                                                                                 <PaymentsDiv employee={employee} projectDetails={this.props.projectDetails}/>
-                                                                              </div>: "Project in progress";
+                                                                              </div>: "";
 
 
           displayInfo = <div className="col">
@@ -200,7 +201,30 @@ class EmployeeDetails extends Component {
   }
 
   markProjectCompleted() {
-    
+    var status;
+    var projectId = this.props.projectDetails.projectId;
+    console.log("project ID: " + projectId);
+    API.makeProjectCompleted(projectId)
+        .then((res) => {
+            status = res.status;
+            return res.json();
+        }).then((json) => {
+            if (status === 201) {
+                this.setState({
+                    message: json.message
+                });
+            } else if (status === 401) {
+                const message = json.message
+                this.setState({
+                    message: message
+                });
+            } else {
+                const message = json.message
+                this.setState({
+                    message: message
+                });
+            }
+    });
   }
 
   render() {
@@ -208,6 +232,7 @@ class EmployeeDetails extends Component {
       <div className="container-fluid">
         <div className="row">
           {this.state.displayInfo}
+          {this.state.message}
         </div>
       </div>
     );
@@ -295,20 +320,6 @@ class ProfileCreator extends Component {
         };
   }
 
-  notify = (message) => {
-    toast.error(message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 3000
-    });
-  }
-
-  notifySuccess = (message) => {
-    toast.success(message, {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 3000
-    });
-  }
-
   handleAccept() {
     var status;
     console.log("employee ID: " + this.props.userProfile.userId.userId);
@@ -327,19 +338,16 @@ class ProfileCreator extends Component {
                 this.setState({
                     message: json.message
                 });
-                this.notifySuccess(json.message);
             } else if (status === 401) {
-                const message = "Something went wrong. Try signing up again !!!"
+                const message = json.message
                 this.setState({
                     message: message
                 });
-                this.notify(message);
             } else {
-                const message = "Server error... Try signing up later !!!"
+                const message = json.message
                 this.setState({
                     message: message
                 });
-                this.notify(message);
             }
     });
   }
@@ -349,10 +357,8 @@ class ProfileCreator extends Component {
     let prj_details = JSON.parse(localStorage.getItem('projectDetails'));
     let acceptButton = localStorage.getItem('username') === prj_details.username ? <button className="btn btn-success"
                                                                                           type="button"
-                                                                                          id="hireButton"
-                                                                                          value={this.props.userProfile.userId.userId}
                                                                                           onClick={this.handleAccept.bind(this)}>
-                                                                                      Hire
+                                                                                      Hire Freelancer
                                                                                     </button>: "";
     this.setState({
       acceptButton: acceptButton
@@ -376,11 +382,7 @@ class ProfileCreator extends Component {
         <p>{this.props.userProfile.periodInDays}</p>
         <br/><hr/>
         <Link to={`/home`}>{this.state.acceptButton}</Link>
-
-        <br/><hr/><hr/>
-        <div className="form-group">
-          <ToastContainer />
-        </div>
+        <br/><hr/>
       </div>
     );
   }

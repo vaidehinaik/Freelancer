@@ -1,7 +1,16 @@
-// Path for zookeeper directory
-cd "/Users/vaidehinaik/Downloads/kafka_2.11-1.0.1"
+How to run the project step by step:
 
-// Create kafka topics on linux machine
+1: Run Zookeeper Server
+   bin/zookeeper-server-start.sh config/zookeeper.properties
+2: Run Kafka Server
+   bin/kafka-server-start.sh config/server.properties
+3: Create Kafka Topics
+   Check Kafka_Topics_Script directory for the list of kafka topics created for freelancer project
+4. npm start (React Server) : Freelancer/client_react_redux
+5. npm start (Kafka node server): Freelancer/kafka_backend_express
+6. npm start (server.js): Freelancer/kafka_backend_db
+
+FREELANCER KAFKA TOPICS:
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic login_topic
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic signup_topic
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic response_topic
@@ -19,3 +28,24 @@ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 -
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic alltransactions_topic
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic acceptproject_topic
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic projectcompleted_topic
+_____________________________________________________________________________________________________________________________
+
+MONGO DB Database:
+__________________
+DB Name: Freelancer
+DB Collections:
+   - users
+   - projects
+
+Schema Details in:
+- Freelancer/models/Projects.js
+Freelancer/models/Users.js
+
+mlab deployment link:
+_____________________
+
+1. To connect using the mongo shell:
+   mongo ds231199.mlab.com:31199/freelancer -u admin -p admin
+
+2. To connect using a driver via the standard MongoDB URI:
+   mongodb://admin:admin@ds231199.mlab.com:31199/freelancer

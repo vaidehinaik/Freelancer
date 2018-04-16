@@ -18,6 +18,7 @@ let userProjects = require('./db_services/userprojects');
 let transaction = require('./db_services/transactionmanager');
 let alltransactions = require('./db_services/alltransactions');
 let acceptproject = require('./db_services/acceptproject');
+let markprojectcomplete = require('./db_services/markprojectcomplete');
 
 
 let loginConsumer = connection.getConsumerObj(kafka_topics.LOGIN);
@@ -33,6 +34,7 @@ let userProjectsConsumer = connection.getConsumerObj(kafka_topics.USERPROJECTS);
 let transactionConsumer = connection.getConsumerObj(kafka_topics.TRANSACTIONMANAGER);
 let alltransactionsConsumer = connection.getConsumerObj(kafka_topics.ALLTRANSACTIONS);
 let acceptprojectConsumer = connection.getConsumerObj(kafka_topics.ACCEPTPROJECT);
+let markprojectcompleteConsumer = connection.getConsumerObj(kafka_topics.PROJECTCOMPLETED);
 
 try {
   loginConsumer.on('message', function (message) {
@@ -365,6 +367,31 @@ try {
           console.log("Topic: " + data.replyTo);
 
           acceptproject.handle_request(data.data, function (err, res) {
+              console.log('\nAfter Handle Response: ' + JSON.stringify(res));
+              var payloads = [
+                  {
+                      topic: data.replyTo,
+                      messages: JSON.stringify({
+                          correlationId: data.correlationId,
+                          data: res
+                      }),
+                      partition: 0
+                  }
+              ];
+              producer.send(payloads, function (err, data) {
+                  console.log("\n****************************************************\n");
+              });
+          });
+      }
+  });
+
+  markprojectcompleteConsumer.on('message', function (message) {
+      if (message.topic === kafka_topics.PROJECTCOMPLETED) {
+          var data = JSON.parse(message.value);
+          console.log('*** Message recieved for accept project ***');
+          console.log("Topic: " + data.replyTo);
+
+          markprojectcomplete.handle_request(data.data, function (err, res) {
               console.log('\nAfter Handle Response: ' + JSON.stringify(res));
               var payloads = [
                   {

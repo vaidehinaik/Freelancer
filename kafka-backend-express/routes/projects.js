@@ -152,4 +152,26 @@ router.post('/acceptproject', function(req, res) {
   }
 });
 
+router.post('/markComplete', function(req, res) {
+  console.log("\n****************************************************\n");
+  try {
+      console.log("mark project as completed: " + JSON.stringify(req.body));
+      kafka.make_request(kafka_topics.PROJECTCOMPLETED , req.body, function(err, results) {
+            if(err) {
+                console.log(err);
+                throw err;
+            }
+            else if(results.status === 201) {
+                res.status(results.status).json({message: results.message});
+            } else {
+                res.status(results.status).json({message: results.message});
+            }
+        });
+  }
+  catch (e) {
+      console.log("Error in catch: " + e);
+      res.status(401).json({message: "failed to mark project as completed"});
+  }
+});
+
 module.exports = router;
