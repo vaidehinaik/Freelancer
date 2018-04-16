@@ -1,4 +1,11 @@
+Server Ports:
+React-Redux: 3000
+Node.js Server: 3001
+Zookeeper: 9092
+Kafka Broker: 2181
+
 How to run the project step by step:
+
 
 1. Run Zookeeper Server
    bin/zookeeper-server-start.sh config/zookeeper.properties
@@ -50,3 +57,13 @@ _____________________
 
 2. To connect using a driver via the standard MongoDB URI:
    mongodb://admin:admin@ds231199.mlab.com:31199/freelancer
+
+AWS Deployment Details:
+_______________________
+
+Instance Id: i-037ca651f4b9e7975:
+Connect to instance (i-037ca651f4b9e7975) on Public DNS:
+ec2-54-153-1-191.us-west-1.compute.amazonaws.com
+
+Example:
+ssh -i "RSA KEY .pem" ubuntu@ec2-54-153-1-191.us-west-1.compute.amazonaws.com
