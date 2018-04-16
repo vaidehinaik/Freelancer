@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
-var uri = "mongodb://localhost:27017/freelancer";
+// var uri = "mongodb://localhost:27017/freelancer";
 // MongoDB MLAB URL
 // "mongodb://<username>:<password>@ds231199.mlab.com:31199/freelancer"
-// var uri = "mongodb://admin:admin@ds231199.mlab.com:31199/freelancer"
+var uri = "mongodb://admin:admin@ds231199.mlab.com:31199/freelancer"
 
 const options = {
   useMongoClient: true,

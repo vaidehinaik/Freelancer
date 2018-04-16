@@ -240,11 +240,65 @@ class EmployeeDetails extends Component {
 }
 
 class PaymentsDiv extends Component {
-  makePayment() {
 
+  constructor (props) {
+        super(props)
+        this.state = {
+          amount: this.props.employee.bidAmount,
+          employeeInfo: this.props.employee,
+          projectDetails: this.props.projectDetails,
+          message: ""
+        };
+        this.handlePayment = this.handlePayment.bind(this);
+        this.makePayment = this.makePayment.bind(this);
+  }
+
+  handlePayment(event) {
+    this.setState({
+      amount: event.target.value
+    })
+  }
+
+  makePayment() {
+    var status;
+    var payload = {
+                    "freelancer": {
+                                    userId: this.state.employeeInfo.userId.userId,
+                                    name: this.state.employeeInfo.userId.name,
+                                    amountType: "received",
+                                    amount: this.state.amount
+                                  },
+                    "projectOwner": {
+                                      userId: this.state.projectDetails.ownerUserId.userId,
+                                      name: this.state.projectDetails.ownerUserId.name,
+                                      amountType: "funded",
+                                      amount: this.state.amount
+                                    }
+                 }
+    console.log("payload to be submitted: " + JSON.stringify(payload));
+    API.makePaymentToFreelancer(payload)
+        .then((res) => {
+            status = res.status;
+            return res.json();
+        }).then((json) => {
+            if (status === 201) {
+                this.setState({
+                    message: json.message
+                });
+            } else if (status === 401) {
+                const message = json.message
+                this.setState({
+                    message: message
+                });
+            } else {
+                const message = json.message
+                this.setState({
+                    message: message
+                });
+            }
+    });
   }
   render() {
-    console.log("makepayemtns div : " + JSON.stringify(this.props.employee));
     return <div className="row justify-content-md-center">
               <div className="panel panel-primary">
                 <div className="panel-body">
@@ -260,17 +314,17 @@ class PaymentsDiv extends Component {
                             id="BidAmount"
                             placeholder="Amount ($)"
                             required="required"
-                            value={this.props.employee.bidAmount}
-                            onChange={this.makePayment}
+                            value={this.state.amount}
+                            onChange={this.handlePayment}
                         />
                     </div>
                     <div className="form-group">
-                        <button
-                            className="btn btn-primary"
-                            type="button"
-                            onClick={this.handleSubmit}>
-                                Make Payment
-                        </button>
+                          <button
+                              className="btn btn-primary"
+                              type="button"
+                              onClick={this.makePayment}>
+                                  Make Payment
+                          </button>
                         <hr></hr>
                     </div>
                   </form>

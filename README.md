@@ -1,10 +1,10 @@
 How to run the project step by step:
 
-1: Run Zookeeper Server
+1. Run Zookeeper Server
    bin/zookeeper-server-start.sh config/zookeeper.properties
-2: Run Kafka Server
+2. Run Kafka Server
    bin/kafka-server-start.sh config/server.properties
-3: Create Kafka Topics
+3. Create Kafka Topics
    Check Kafka_Topics_Script directory for the list of kafka topics created for freelancer project
 4. npm start (React Server) : Freelancer/client_react_redux
 5. npm start (Kafka node server): Freelancer/kafka_backend_express
@@ -28,6 +28,7 @@ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 -
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic alltransactions_topic
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic acceptproject_topic
 bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic projectcompleted_topic
+bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic makepayment_topic
 _____________________________________________________________________________________________________________________________
 
 MONGO DB Database:

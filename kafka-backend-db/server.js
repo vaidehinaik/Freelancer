@@ -19,7 +19,7 @@ let transaction = require('./db_services/transactionmanager');
 let alltransactions = require('./db_services/alltransactions');
 let acceptproject = require('./db_services/acceptproject');
 let markprojectcomplete = require('./db_services/markprojectcomplete');
-
+let payments = require('./db_services/payments');
 
 let loginConsumer = connection.getConsumerObj(kafka_topics.LOGIN);
 let signupConsumer = connection.getConsumerObj(kafka_topics.SIGNUP);
@@ -35,6 +35,7 @@ let transactionConsumer = connection.getConsumerObj(kafka_topics.TRANSACTIONMANA
 let alltransactionsConsumer = connection.getConsumerObj(kafka_topics.ALLTRANSACTIONS);
 let acceptprojectConsumer = connection.getConsumerObj(kafka_topics.ACCEPTPROJECT);
 let markprojectcompleteConsumer = connection.getConsumerObj(kafka_topics.PROJECTCOMPLETED);
+let paymentsConsumer = connection.getConsumerObj(kafka_topics.MAKEPAYMENT);
 
 try {
   loginConsumer.on('message', function (message) {
@@ -392,6 +393,31 @@ try {
           console.log("Topic: " + data.replyTo);
 
           markprojectcomplete.handle_request(data.data, function (err, res) {
+              console.log('\nAfter Handle Response: ' + JSON.stringify(res));
+              var payloads = [
+                  {
+                      topic: data.replyTo,
+                      messages: JSON.stringify({
+                          correlationId: data.correlationId,
+                          data: res
+                      }),
+                      partition: 0
+                  }
+              ];
+              producer.send(payloads, function (err, data) {
+                  console.log("\n****************************************************\n");
+              });
+          });
+      }
+  });
+
+  paymentsConsumer.on('message', function (message) {
+      if (message.topic === kafka_topics.MAKEPAYMENT) {
+          var data = JSON.parse(message.value);
+          console.log('*** Message recieved for accept project ***');
+          console.log("Topic: " + data.replyTo);
+
+          payments.handle_request(data.data, function (err, res) {
               console.log('\nAfter Handle Response: ' + JSON.stringify(res));
               var payloads = [
                   {

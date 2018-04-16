@@ -181,5 +181,30 @@ router.post('/alltransactions', function(req, res, next) {
     }
 });
 
+router.post('/makePayment', function(req, res, next) {
+    console.log("\n****************************************************\n");
+    try {
+        console.log("request body: " + JSON.stringify(req.body));
+        kafka.make_request(kafka_topics.MAKEPAYMENT , req.body, function(err, result) {
+            console.log('*** Result *** ' + JSON.stringify(result));
+            if(err) {
+                console.log(err);
+                throw err;
+            }
+            else {
+                if(result.status === 201) {
+                    res.status(result.status).json({"message":result.message});
+                }
+                else if(result.status === 401) {
+                    res.status(result.status).json({"message":result.message});
+                }
+            }
+        });
+    }
+    catch (e) {
+        console.log("Error in Catch: "  + e);
+        res.status(401).json({message: "Payment failed"});
+    }
+});
 
 module.exports = router;

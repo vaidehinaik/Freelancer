@@ -243,3 +243,19 @@ export const acceptBid = (projectId, employeeId) =>
         console.log("This is error in make project completed");
         return error;
     });
+
+  export const makePaymentToFreelancer = (payload) =>
+    fetch(`${api}/users/makePayment`, {
+      method: 'POST',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+      }).then(res => {
+        return res;
+      })
+      .catch(error => {
+        console.log("This is error in make payment");
+        return error;
+    });

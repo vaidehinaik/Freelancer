@@ -14,5 +14,6 @@ exports.kafka_topic_enums = {
     TRANSACTIONMANAGER: 'transactionmanager_topic',
     ALLTRANSACTIONS: 'alltransactions_topic',
     ACCEPTPROJECT: 'acceptproject_topic',
-    PROJECTCOMPLETED: 'projectcompleted_topic'
+    PROJECTCOMPLETED: 'projectcompleted_topic',
+    MAKEPAYMENT: 'makepayment_topic'
 };
