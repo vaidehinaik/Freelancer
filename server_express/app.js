@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
+var MemoryStore = require('memorystore')(expressSession);
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
@@ -32,7 +33,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(expressSession({secret: 'freelancer', saveUninitialized: false, resave: false}));
+// app.use(expressSession({secret: 'freelancer', saveUninitialized: false, resave: false}));
+app.use(expressSession({
+    store: new MemoryStore({
+      checkPeriod: 86400000
+    }),
+    secret: 'freelancer',
+		saveUninitialized: false,
+		resave: false
+}));
 
 app.use('/', index);
 app.use('/users', users);
