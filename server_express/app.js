@@ -43,6 +43,9 @@ app.use(expressSession({
 		resave: false
 }));
 
+const staticFiles = express.static(path.join(__dirname, '../client_react_redux/build'));
+app.use(staticFiles);
+
 app.use('/', index);
 app.use('/users', users);
 app.use('/projects', projects);
