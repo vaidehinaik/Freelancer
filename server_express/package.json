@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "nodemon app.js",
     "test": "mocha",
     "build": "babel . --ignore node_modules,build --out-dir build",
     "start:prod": "node build/app.js"
