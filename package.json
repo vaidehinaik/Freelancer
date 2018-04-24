@@ -11,10 +11,10 @@
     "concurrently": "^3.5.1"
   },
   "scripts": {
-    "build": "concurrently \"cd client_react_redux && npm run build\" \"cd server_express && npm run build\"",
-    "install": "(cd client_react_redux && npm install) && (cd server_express && npm install)",
-    "start": "concurrently \"cd client_react_redux && set PORT=3000 && npm start\" \"cd server_express && set PORT=3001 && npm start\"",
-    "start:prod": "cd server_express && npm start:prod",
-    "heroku-postbuild": "npm run build"
+    "build": "concurrently \"cd client_react_redux && yarn build\" \"cd server_express && yarn build\"",
+    "install": "(cd client_react_redux && yarn) && (cd server_express && yarn)",
+    "start": "concurrently \"cd client_react_redux && set PORT=3000 && yarn start\" \"cd server_express && set PORT=3001 && yarn start\"",
+    "start:prod": "cd server_express && yarn start:prod",
+    "heroku-postbuild": "yarn build"
   }
 }
