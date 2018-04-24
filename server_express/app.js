@@ -66,4 +66,11 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+app.use('/*', staticFiles);
+
+const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`Listening on port`, PORT);
+  });
+
 module.exports = app;
