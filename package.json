@@ -1,0 +1,20 @@
+{
+  "name": "freelancer-lab",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {},
+  "license": "MIT",
+  "engines": {
+    "node": "v8.9.4"
+  },
+  "dependencies": {
+    "concurrently": "^3.5.1"
+  },
+  "scripts": {
+    "build": "concurrently \"cd client_react_redux && npm run build\" \"cd server_express && npm run build\"",
+    "install": "(cd client_react_redux && npm install) && (cd server_express && npm install)",
+    "start": "concurrently \"cd client_react_redux && set PORT=3000 && npm start\" \"cd server_express && set PORT=3001 && npm start\"",
+    "start:prod": "cd server_express && npm start:prod",
+    "heroku-postbuild": "npm run build"
+  }
+}

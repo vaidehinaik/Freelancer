@@ -1,9 +1,18 @@
 var mysql = require('mysql');
 
+// localhost
+// var db_config = {
+// 						host     : 'localhost',
+// 						user     : 'root',
+// 						password : 'admin',
+// 						database : 'freelancer'
+// 					}
+
+// aws database
 var db_config = {
-						host     : 'localhost',
+						host     : 'freelancer.ca9j02g2avzs.us-west-1.rds.amazonaws.com',
 						user     : 'root',
-						password : 'admin',
+						password : 'password123',
 						database : 'freelancer'
 					}
 

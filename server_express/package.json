@@ -4,11 +4,17 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "test": "mocha"
+    "test": "mocha",
+    "build": "babel . --ignore node_modules,build --out-dir build",
+    "start:prod": "node build/app.js"
   },
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "bcrypt": "^1.0.3",
-    "body-parser": "~1.18.2",
+    "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
     "cookie-parser": "~1.4.3",
@@ -21,6 +27,11 @@
     "morgan": "~1.9.0",
     "mysql": "^2.14.1",
     "npm": "^5.7.1",
+    "path": "^0.12.7",
     "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "babel-register": "^6.26.0",
+    "nodemon": "^1.17.3"
   }
 }

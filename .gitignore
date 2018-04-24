@@ -1,6 +1,7 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
+node_modules/*
 client_react_redux/node_modules/*
 server_express/node_modules/*
 kafka-backend-db/node_modules/*

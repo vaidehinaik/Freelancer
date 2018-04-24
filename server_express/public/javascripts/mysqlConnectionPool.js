@@ -1,10 +1,20 @@
 var mysql = require('mysql');
 
+// localhost config
+// var pool_config = {
+// 						connectionLimit: 100,
+// 						host     : 'localhost',
+// 						user     : 'root',
+// 						password : 'admin',
+// 						database : 'freelancer'
+// 					}
+
+// aws database
 var pool_config = {
 						connectionLimit: 100,
-						host     : 'localhost',
+						host     : 'freelancer.ca9j02g2avzs.us-west-1.rds.amazonaws.com',
 						user     : 'root',
-						password : 'admin',
+						password : 'password123',
 						database : 'freelancer'
 					}
 // connection pool
